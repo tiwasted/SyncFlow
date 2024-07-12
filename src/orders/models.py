@@ -19,6 +19,8 @@ class Order(models.Model):
     order_time = models.TimeField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    assigned_employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_orders')
+
     address = models.CharField(max_length=255)
     phone_number_client = models.CharField(max_length=11)
     first_name_client = models.CharField(max_length=255)
