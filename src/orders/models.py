@@ -10,7 +10,6 @@ class Order(models.Model):
         ('cancelled', 'Отменен'),
     )
 
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='orders')
 
     order_name = models.CharField(max_length=255)
@@ -25,6 +24,7 @@ class Order(models.Model):
     phone_number_client = models.CharField(max_length=11)
     first_name_client = models.CharField(max_length=255)
     description = models.TextField()
+    # price
 
     def __str__(self):
         return self.order_name

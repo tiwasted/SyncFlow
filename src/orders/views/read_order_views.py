@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from orders.models import Order
-from orders.serializers.order_read_serializers import OrderListEmployerSerializer
+from orders.serializers.read_order_serializers import OrderListEmployerSerializer
 
 
 class OrderListEmployerView(generics.ListAPIView):

@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from orders.serializers.order_create_serializers import OrderCreateSerializer
+from orders.serializers.create_order_serializers import OrderCreateSerializer
 
 
 class OrderCreateView(APIView):
