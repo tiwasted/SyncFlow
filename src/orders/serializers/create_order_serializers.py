@@ -13,8 +13,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                   'address',
                   'phone_number_client',
                   'first_name_client',
-                  'description'
-        ]
+                  'description',
+                  'price'
+                  ]
 
     def create(self, validated_data):
         return Order.objects.create(**validated_data)

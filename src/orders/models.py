@@ -24,7 +24,7 @@ class Order(models.Model):
     phone_number_client = models.CharField(max_length=11)
     first_name_client = models.CharField(max_length=255)
     description = models.TextField()
-    # price
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.order_name
