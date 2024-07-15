@@ -1,34 +1,18 @@
-# Использует официальный образ Python
-FROM python:3.11
+FROM python:3.11-slim
 
-ENV PYTHONUNBUFFERED=1
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-# Устанавливает зависимости системы
-RUN apt-get update \
-    && apt-get install -y curl \
-    && apt-get clean
+RUN pip install poetry
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
-
-ENV PATH="/root/.local/bin:$PATH"
-
-# Проверяет poetry
-RUN poetry --version
-
-# Устанавливает рабочую директорию
 WORKDIR /app
 
-# Копирует файлы poetry.lock pyproject.toml
-COPY pyproject.toml poetry.lock* /app/
-# RUN pip install poetry
+COPY pyproject.toml poetry.lock* ./
 
-RUN poetry install --no-root
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi
 
-# Копирует файлы проекта
-COPY src/ /app/
+COPY . .
 
-# Открывает порт
-EXPOSE 8000
-
-# Команда для запуска приложения
-CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "src/manage.py", "runserver", "0.0.0.0:8000"]
