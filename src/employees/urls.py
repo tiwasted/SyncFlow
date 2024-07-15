@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.employee_create_views import EmployeeCreateView
+from .views.create_employee_views import EmployeeCreateView
 
 
 urlpatterns = [

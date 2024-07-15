@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 
-from ..serializers.employee_create_serializers import EmployeeCreateSerializer
+from ..serializers.create_employee_serializers import EmployeeCreateSerializer
 from users.models import CustomUser
 
 User = get_user_model()

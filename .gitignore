@@ -1,2 +1,5 @@
-# Игнорировать файл settings.py
-src/syncflow/settings.py
+# Ignore file settings.py
+#src/syncflow/settings.py
+
+# Enviroment variables
+.env
