@@ -6,6 +6,7 @@ from employees.models import Employee
 
 class Order(models.Model):
     STATUS_CHOICES = (
+        ('pending', 'В обработке'),
         ('completed', 'Выполнен'),
         ('cancelled', 'Отменен'),
     )
@@ -13,6 +14,7 @@ class Order(models.Model):
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='orders')
 
     order_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in processing')
 
     order_date = models.DateField()
     order_time = models.TimeField()
@@ -28,3 +30,16 @@ class Order(models.Model):
 
     def __str__(self):
         return self.order_name
+
+    def assign_employee(self, employee):
+        self.assigned_employee = employee
+        self.status = 'pending'
+        self.save()
+
+    def complete_order(self):
+        self.status = 'completed'
+        self.save()
+
+    def cancel_order(self):
+        self.status = 'cancelled'
+        self.save()
