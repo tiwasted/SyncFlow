@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 
     'employers.apps.EmployersConfig',
     'employees.apps.EmployeesConfig',
-    'b2b_clients.apps.B2BClientsConfig',
+    'b2c_client_orders.apps.B2CClientOrdersConfig',
+    'b2b_client_orders.apps.B2BClientOrdersConfig',
 
     'orders.apps.OrdersConfig',
     'schedules.apps.SchedulesConfig',

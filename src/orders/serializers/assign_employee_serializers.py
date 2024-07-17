@@ -1,11 +1,10 @@
 from rest_framework import serializers
-from orders.models import Order
+# from orders.models import Order
 from employees.models import Employee
 
 
 class AssignEmployeeToOrderSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Order
         fields = ['assigned_employee']
 
     def validate_assigned_employee(self, value):
