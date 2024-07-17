@@ -3,7 +3,7 @@ from users.models import CustomUser
 from employees.models import Employee
 
 
-class EmployeeListSerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(source='user.phone')
 
     class Meta:

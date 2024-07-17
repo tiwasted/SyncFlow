@@ -6,21 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/serializers/create_employee_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/serializers/create_employee_serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/employees/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employers/serializers/registration_employer_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/serializers/registration_employer_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/order_assign_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/assign_employee_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/status_order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/status_order_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/order_assign_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/assign_employee_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/read_order_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/order_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/status_order_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/status_order_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employees/views/employee_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/views/employee_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/create_order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/create_order_serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/syncflow/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/syncflow/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,14 +42,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/tiw/projects/SyncFlow&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "dev",
+    "last_opened_file_path": "/home/tiw/projects/X-MVP-server"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

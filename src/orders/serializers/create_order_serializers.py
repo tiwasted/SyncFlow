@@ -6,8 +6,7 @@ from orders.models import Order
 class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['employer',
-                  'order_name',
+        fields = ['order_name',
                   'order_date',
                   'order_time',
                   'address',
@@ -18,4 +17,5 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                   ]
 
     def create(self, validated_data):
-        return Order.objects.create(**validated_data)
+        instance = Order.objects.create(**validated_data)
+        return instance

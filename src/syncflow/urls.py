@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('employers/', include('employers.urls')),
     path('employees/', include('employees.urls')),
+    # path('b2b/', include('b2b_clients.urls')),
     path('orders/', include('orders.urls')),
     path('schedules/', include('schedules.urls')),
     path('order-history/', include('order_history.urls')),

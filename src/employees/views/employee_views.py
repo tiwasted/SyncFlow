@@ -1,11 +1,11 @@
 from rest_framework import generics, permissions
 from employees.models import Employee
-from employees.serializers.employee_serializers import EmployeeListSerializer
+from employees.serializers.employee_serializers import EmployeeSerializer
 
 
 class EmployeeListView(generics.ListAPIView):
     queryset = Employee.objects.all()
-    serializer_class = EmployeeListSerializer
+    serializer_class = EmployeeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -14,3 +14,10 @@ class EmployeeListView(generics.ListAPIView):
             employer = user.employer_profile
             return Employee.objects.filter(employer=employer)
         return Employee.objects.none()
+
+
+class EmployeeDeleteView(generics.DestroyAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'pk'
