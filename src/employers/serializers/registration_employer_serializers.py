@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
+
+from users.validators import validate_password
 from employers.models import Employer
+
 
 User = get_user_model()
 
@@ -18,7 +20,7 @@ class EmployerRegistrationSerializer(serializers.ModelSerializer):
         fields = ('phone', 'password', 'company_name', 'company_description')
 
     def validate_phone(self, value):
-        # Проверка Email
+        # Проверка Phone
         if User.objects.filter(phone=value).exists():
             raise serializers.ValidationError("Пользотель с таким номером телефона уже существует")
         return value

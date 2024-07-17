@@ -1,5 +1,4 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics, permissions
 from users.models import CustomUser
 from orders.models import Order
 from employees.models import Employee
@@ -8,7 +7,7 @@ from orders.serializers.order_serializers import OrderListEmployerSerializer, Fu
 
 class OrderListEmployerView(generics.ListAPIView):
     serializer_class = OrderListEmployerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         # Получаем заказы только для текущего аутентифицированного работодателя
@@ -20,7 +19,7 @@ class OrderListEmployerView(generics.ListAPIView):
 
 class OrderListEmployeeView(generics.ListAPIView):
     serializer_class = FullOrderListSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         # Получаем текущего пользователя (сотрудника)

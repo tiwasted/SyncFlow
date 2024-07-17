@@ -2,11 +2,11 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
 from orders.models import Order
-from orders.serializers.order_assign_serializers import OrderAssignEmployeeSerializer
+from orders.serializers.assign_employee_serializers import AssignEmployeeToOrderSerializer
 
 
-class OrderAssignEmployeeView(generics.UpdateAPIView):
-    serializer_class = OrderAssignEmployeeSerializer
+class AssignEmployeeToOrderView(generics.UpdateAPIView):
+    serializer_class = AssignEmployeeToOrderSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'pk'
 

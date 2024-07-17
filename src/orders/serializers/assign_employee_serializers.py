@@ -3,7 +3,7 @@ from orders.models import Order
 from employees.models import Employee
 
 
-class OrderAssignEmployeeSerializer(serializers.ModelSerializer):
+class AssignEmployeeToOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['assigned_employee']
@@ -19,3 +19,8 @@ class OrderAssignEmployeeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Работник не принадлежит этому Работадателю")
 
         return value
+
+    def update(self, instance, validated_data):
+        assigned_employee = validated_data.get('assigned_employee')
+        instance.assign_employee(assigned_employee)
+        return instance
