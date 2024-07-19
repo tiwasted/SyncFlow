@@ -4,7 +4,7 @@ from employers.models import Employer
 
 
 class B2BOrder(AssignableOrder):
-    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='b2b_clients')
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='b2b_orders')
 
     company_name = models.CharField(max_length=255)
     order_date = models.DateField()

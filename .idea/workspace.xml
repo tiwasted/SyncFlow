@@ -5,12 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/orders/views/b2b_order_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/b2b_client_orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2b_client_orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/b2b_client_orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2b_client_orders/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/b2b_client_orders/views/assign_employee_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/b2c_client_orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2c_client_orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/b2c_client_orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2c_client_orders/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/employees/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/views/employee_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/views/employee_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/create_order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/create_order_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/syncflow/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/assign_employee_serializers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/create_order_serializers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/delete_order_serializers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/edit_order_serilalizers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/status_order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/status_order_serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/assign_employee_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/create_order_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/delete_order_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/edit_order_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/order_views.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/syncflow/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,12 +58,42 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.order_views.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "dev",
     "last_opened_file_path": "/home/tiw/projects/X-MVP-server"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="b2b_order_views" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SyncFlow" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/orders/views" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/orders/views/b2b_order_views.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.b2b_order_views" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -67,5 +111,16 @@
       <updated>1720379783891</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

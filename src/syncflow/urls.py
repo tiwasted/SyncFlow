@@ -17,8 +17,8 @@ urlpatterns = [
 
     path('employers/', include('employers.urls')),
     path('employees/', include('employees.urls')),
-    path('b2c-client-orders/', include('b2c_client_orders.urls')),
-    path('b2b-client-orders/', include('b2b_client_orders.urls')),
+    path('b2c/', include('b2c_client_orders.urls')),
+    path('b2b/', include('b2b_client_orders.urls')),
     path('orders/', include('orders.urls')),
     path('schedules/', include('schedules.urls')),
     path('order-history/', include('order_history.urls')),
