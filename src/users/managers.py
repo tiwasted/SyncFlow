@@ -15,6 +15,11 @@ class UserManager(BaseUserManager):
         extra_fileds.setdefault('is_staff', True)
         extra_fileds.setdefault('is_superuser', True)
 
+        if extra_fileds.get('is_staff') is not True:
+            raise ValueError('У суперпользователя должно быть значение is_staff=True.')
+        if extra_fileds.get('is_superuser') is not True:
+            raise ValueError('У суперпользователя должно быть значение is_superuser=True.')
+
         if not phone:
             raise ValueError('У суперпользователей должен быть адрес электронной почты.')
 

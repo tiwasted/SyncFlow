@@ -1,22 +1,22 @@
-# from rest_framework import generics, permissions
-# from django_filters.rest_framework import DjangoFilterBackend
-# from rest_framework.filters import OrderingFilter
-# from orders.models import Order
-# from order_history.serializers.order_history_serializers import OrderHistorySerializer
-#
-#
-# class OrderHistoryView(generics.ListAPIView):
-#     queryset = Order.objects.all()
-#     serializer_class = OrderHistorySerializer
-#     permission_classes = [permissions.IsAuthenticated]
-#     filter_backends = [DjangoFilterBackend, OrderingFilter]
-#     filterset_fields = ['status', 'order_date', 'assigned_employee']
-#     ordering_fields = ['order_date', 'price', 'created_at']
-#
-#     def get_queryset(self):
-#         user = self.request.user
-#         if hasattr(user, 'employee_profile'):
-#             return Order.objects.filter(assigned_employee=user.employee_profile)
-#         elif hasattr(user, 'employer_profile'):
-#             return Order.objects.filter(employer=user.employer_profile)
-#         return Order.objects.none()
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as filters
+
+from b2b_client_orders.models import B2BOrder
+from b2c_client_orders.models import B2COrder
+from orders.serializers.order_serializers import B2BOrderSerializer, B2COrderSerializer
+from order_history.filters import B2BOrderFilter, B2COrderFilter
+
+
+class B2BOrderHistoryViewSet(viewsets.ModelViewSet):
+    queryset = B2BOrder.objects.all()
+    serializer_class = B2BOrderSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = B2BOrderFilter
+
+
+class B2COrderHistoryViewSet(viewsets.ModelViewSet):
+    queryset = B2COrder.objects.all()
+    serializer_class = B2COrderSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = B2COrderFilter

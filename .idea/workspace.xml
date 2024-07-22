@@ -5,27 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/orders/views/b2b_order_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/b2b_client_orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2b_client_orders/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/b2b_client_orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2b_client_orders/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/b2b_client_orders/views/assign_employee_views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/b2c_client_orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2c_client_orders/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/b2c_client_orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2c_client_orders/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/assign_employee_serializers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/create_order_serializers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/delete_order_serializers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/edit_order_serilalizers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/status_order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/status_order_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/assign_employee_views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/create_order_views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/delete_order_views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/edit_order_views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/order_views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/syncflow/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/order_history/serializers/order_history_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/order_history/serializers/order_history_serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/order_history/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/order_history/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/order_history/views/order_history_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/order_history/views/order_history_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/base_order.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/base_order.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schedules/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedules/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/managers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,15 +45,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.order_views.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "dev",
-    "last_opened_file_path": "/home/tiw/projects/X-MVP-server"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.order_views.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/tiw/projects/X-MVP-server&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="b2b_order_views" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SyncFlow" />

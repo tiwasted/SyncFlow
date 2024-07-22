@@ -6,6 +6,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from employers.models import Employer
 from employees.models import Employee
+from schedules.models import Schedule
+from b2b_client_orders.models import B2BOrder
+from b2c_client_orders.models import B2COrder
 
 
 class CanViewOrder(permissions.BasePermission):
@@ -45,10 +48,18 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
             employee = Employee.objects.get(id=employee_id)
         except Employee.DoesNotExist:
             return Response({"error": "Сотрудник не найден"}, status=status.HTTP_404_NOT_FOUND)
-
+        # Назначение сотрудника
         order.assign_employee(employee)
+
+        if isinstance(order, B2BOrder):
+            Schedule.objects.create(b2b_order=order, assigned_employee=employee)
+        elif isinstance(order, B2COrder):
+            Schedule.objects.create(b2c_order=order, assigned_employee=employee)
+
         serializer = self.get_serializer(order)
         return Response(serializer.data)
+
+
 
     def get_object(self):
         obj = get_object_or_404(self.queryset, pk=self.kwargs["pk"])

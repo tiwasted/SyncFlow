@@ -1,12 +1,12 @@
-# from django.db import models
-# from orders.models import Order
-# from employees.models import Employee
-#
-#
-# class Schedule(models.Model):
-#     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='schedule')
-#     assigned_employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return f"{self.order.order_name} - {self.assigned_employee.user.phone}"
-#
+from django.db import models
+from employees.models import Employee
+
+
+class Schedule(models.Model):
+    b2b_order = models.ForeignKey('b2b_client_orders.B2BOrder', on_delete=models.CASCADE, null=True, blank=True, related_name='schedules')
+    b2c_order = models.ForeignKey('b2c_client_orders.B2COrder', on_delete=models.CASCADE, null=True, blank=True, related_name='schedules')
+    assigned_employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='schedules')
+
+    def __str__(self):
+        order = self.b2b_order or self.b2c_order
+        return f"Schedule for {order} assigned to {self.employee}"

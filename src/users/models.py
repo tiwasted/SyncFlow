@@ -4,7 +4,7 @@ from .managers import UserManager
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    phone = models.CharField(max_length=15, unique=True, null=True, blank=True)
+    phone = models.CharField(max_length=11, unique=True, null=True, blank=True)
     EMPLOYER = 'employer'
     EMPLOYEE = 'employee'
     ROLE_CHOICES = [
