@@ -11,3 +11,9 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def delete(self, *args, **kwargs):
+        # Удаляем связанный объект CustomUser
+        self.user.delete()
+        # Вызываем родительский метод delete для удаления объекта Employee
+        super().delete(*args, **kwargs)
