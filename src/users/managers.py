@@ -11,16 +11,16 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, phone, password=None, **extra_fileds):
-        extra_fileds.setdefault('is_staff', True)
-        extra_fileds.setdefault('is_superuser', True)
+    def create_superuser(self, phone, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
 
-        if extra_fileds.get('is_staff') is not True:
+        if extra_fields.get('is_staff') is not True:
             raise ValueError('У суперпользователя должно быть значение is_staff=True.')
-        if extra_fileds.get('is_superuser') is not True:
+        if extra_fields.get('is_superuser') is not True:
             raise ValueError('У суперпользователя должно быть значение is_superuser=True.')
 
         if not phone:
             raise ValueError('У суперпользователей должен быть адрес электронной почты.')
 
-        return self.create_user(phone, password=password, **extra_fileds)
+        return self.create_user(phone, password=password, **extra_fields)
