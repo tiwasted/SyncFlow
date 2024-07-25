@@ -68,7 +68,13 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         if order.assigned_employee != employee:
             return Response({"error": "Вы не назначены на этот заказ"}, status=status.HTTP_403_FORBIDDEN)
 
+        report = request.data.get('report', '')
         order.complete_order()
+
+        if report:
+            order.report = report
+            order.save()
+
         serializer = self.get_serializer(order)
         return Response(serializer.data)
 
@@ -84,6 +90,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         if order.assigned_employee != employee:
             return Response({"error": "Вы не назначены на этот заказ"}, status=status.HTTP_403_FORBIDDEN)
 
+        report = request.data.get('report')
         order.cancel_order()
         serializer = self.get_serializer(order)
         return Response(serializer.data)

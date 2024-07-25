@@ -6,11 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/views/assigned_order_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/views/assigned_order_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/views/employee_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/views/employee_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/orders/views/base_order.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/base_order.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/syncflow/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

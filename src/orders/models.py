@@ -10,6 +10,7 @@ class AssignableOrder(models.Model):
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in processing')
     assigned_employee = models.ForeignKey('employees.Employee', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_assigned_orders')
+    report = models.TextField(blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -28,4 +29,6 @@ class AssignableOrder(models.Model):
 
     def cancel_order(self):
         self.status = 'cancelled'
+        if report:
+            self.report = report
         self.save()

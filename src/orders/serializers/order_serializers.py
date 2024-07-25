@@ -28,6 +28,7 @@ class B2BOrderSerializer(serializers.ModelSerializer):
                   'description',
                   'created_at',
                   'status',
+                  'report',
                   'assigned_employee',
                   'assigned_employee_id'
                  ]
@@ -61,6 +62,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'description',
                   'created_at',
                   'status',
+                  'report',
                   'assigned_employee',
                   'assigned_employee_id'
                   ]
