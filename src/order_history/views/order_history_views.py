@@ -14,9 +14,15 @@ class B2BOrderHistoryViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = B2BOrderFilter
 
+    def get_queryset(self):
+        return B2BOrder.objects.filter(status__in=['completed', 'cancelled'])
+
 
 class B2COrderHistoryViewSet(viewsets.ModelViewSet):
     queryset = B2COrder.objects.all()
     serializer_class = B2COrderSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = B2COrderFilter
+
+    def get_queryset(self):
+        return B2COrder.objects.filter(status__in=['completed', 'cancelled'])
