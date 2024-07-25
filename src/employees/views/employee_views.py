@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# Чтение сотрудников для Работодателя
 class EmployeeListView(generics.ListAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
@@ -21,6 +22,7 @@ class EmployeeListView(generics.ListAPIView):
         return Employee.objects.none()
 
 
+# Удаление сотрудников через Работодателя
 class EmployeeDeleteView(generics.DestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer

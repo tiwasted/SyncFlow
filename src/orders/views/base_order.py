@@ -3,23 +3,15 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.dateparse import parse_date
 
 from employers.models import Employer
 from employees.models import Employee
 from schedules.models import Schedule
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
-
-
-class CanViewOrder(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # Разрешить доступ, если пользователь - работодатель этого заказа
-        if hasattr(request.user, 'employer_profile'):
-            return obj.employer == request.user.employer_profile
-        # Разрешить доступ, если пользователь - назначенный сотрудник
-        if hasattr(request.user, 'employee_profile'):
-            return obj.assigned_employee == request.user.employee_profile
-        return False
+from orders.serializers.order_serializers import B2BOrderSerializer, B2COrderSerializer
+from orders.permissions import CanViewOrder
 
 
 class BaseOrderViewSet(viewsets.ModelViewSet):
@@ -29,7 +21,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         user = self.request.user
         try:
             employer = user.employer_profile
-            return self.queryset.filter(employer=employer)
+            return self.queryset.filter(employer=employer, status='in processing')
         except Employer.DoesNotExist:
             return self.queryset.none()
 
@@ -58,8 +50,6 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(order)
         return Response(serializer.data)
-
-
 
     def get_object(self):
         obj = get_object_or_404(self.queryset, pk=self.kwargs["pk"])

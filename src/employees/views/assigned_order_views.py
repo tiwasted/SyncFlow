@@ -7,10 +7,11 @@ from django.db.models import Q
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
 from employees.serializers.unified_order_serializers import UnifiedOrderSerializer
+from orders.permissions import CanViewOrder
 
 
 class AssignedOrderEmployeeListView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CanViewOrder]
 
     def get(self, request):
         # Получаем employee_id из токена JWT
