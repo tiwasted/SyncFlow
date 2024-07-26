@@ -47,6 +47,7 @@ class B2BOrderSerializer(serializers.ModelSerializer):
 
 class B2COrderSerializer(serializers.ModelSerializer):
     employer = serializers.PrimaryKeyRelatedField(read_only=True)
+    assigned_employee = EmployeeSerializer(read_only=True)
 
     class Meta:
         model = B2COrder

@@ -1,7 +1,8 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 
+from users.models import CustomUser
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
 from orders.serializers.order_serializers import B2BOrderSerializer, B2COrderSerializer
@@ -13,6 +14,7 @@ class B2BOrderHistoryViewSet(viewsets.ModelViewSet):
     serializer_class = B2BOrderSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = B2BOrderFilter
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return B2BOrder.objects.filter(status__in=['completed', 'cancelled'])
@@ -23,6 +25,11 @@ class B2COrderHistoryViewSet(viewsets.ModelViewSet):
     serializer_class = B2COrderSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = B2COrderFilter
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return B2COrder.objects.filter(status__in=['completed', 'cancelled'])
+        user = self.request.user
+        if user.role == CustomUser.EMPLOYER:
+            employer = user.employer_profile
+            return B2COrder.objects.filter(status__in=['completed', 'cancelled'], employer=employer)
+        return B2COrder.objects.none()

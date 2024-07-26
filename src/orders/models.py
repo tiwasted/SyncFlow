@@ -29,6 +29,4 @@ class AssignableOrder(models.Model):
 
     def cancel_order(self):
         self.status = 'cancelled'
-        if report:
-            self.report = report
         self.save()
