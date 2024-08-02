@@ -15,6 +15,7 @@ drf-spectacular = "^0.27.2"
 django-cors-headers = "^4.4.0"
 django-filter = "^24.2"
 pytz = "^2024.1"
+amocrm-api = "^2.6.1"
 
 [tool.poetry.dev-dependencies]
 

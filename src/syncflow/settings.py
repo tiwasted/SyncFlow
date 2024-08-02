@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'schedules.apps.SchedulesConfig',
     'order_history.apps.OrderHistoryConfig',
+    'api_integration.apps.ApiIntegrationConfig',
 
     # Подключаемые библиотеки
     'rest_framework',
