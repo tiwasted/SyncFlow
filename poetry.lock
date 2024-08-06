@@ -19,6 +19,19 @@ requests = "*"
 cli = ["python-slugify"]
 
 [[package]]
+name = "amocrm-api-wrapper"
+version = "0.0.18"
+description = "Amocrm api wrapper v4"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "amocrm-api-wrapper-0.0.18.tar.gz", hash = "sha256:a25642d26f376a988b863b3203cf0f2eb36b24a0de618e078ef4aa86c5306cb6"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "asgiref"
 version = "3.8.1"
 description = "ASGI specs, helper code, and adapters"
@@ -698,4 +711,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e97be0982e8d3d15f0f97275d0dfe490de29e19fdab17c484a02fb1ae093a27b"
+content-hash = "e21c1682121952ea1b0362df366620681e2857295dabf9f0eeef320fc8702fcc"

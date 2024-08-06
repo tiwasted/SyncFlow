@@ -5,8 +5,6 @@ from employees.serializers.employee_serializers import EmployeeSerializer
 from users.models import CustomUser
 import logging
 
-logger = logging.getLogger(__name__)
-
 
 # Чтение сотрудников для Работодателя
 class EmployeeListView(generics.ListAPIView):
@@ -28,3 +26,6 @@ class EmployeeDeleteView(generics.DestroyAPIView):
     serializer_class = EmployeeSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'pk'
+
+    def perform_destroy(self, instance):
+        instance.delete()

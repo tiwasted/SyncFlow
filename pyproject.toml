@@ -16,6 +16,7 @@ django-cors-headers = "^4.4.0"
 django-filter = "^24.2"
 pytz = "^2024.1"
 amocrm-api = "^2.6.1"
+amocrm-api-wrapper = "^0.0.18"
 
 [tool.poetry.dev-dependencies]
 
