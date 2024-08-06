@@ -14,10 +14,7 @@ class Employee(models.Model):
         return f"{self.first_name} {self.last_name}"
 
     def delete(self, *args, **kwargs):
-        # Удаляем связанный объект CustomUser
-        self.user.delete()
-        # Вызываем родительский метод delete для удаления объекта Employee
-        super().delete(*args, **kwargs)
 
-    def hard_delete(self, *args, **kwargs):
+        # self.user.delete()
+
         super().delete(*args, **kwargs)
