@@ -21,7 +21,8 @@ services:
       - dev
 
   backend:
-    build: .
+    build:
+      context: /home/tommy/backend/SyncFlow
     command: >
       bash -c "python src/manage.py makemigrations &&
                python src/manage.py migrate &&
