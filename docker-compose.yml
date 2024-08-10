@@ -23,7 +23,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: /home/tommy/backend/SyncFlow
+      dockerfile: /home/tommy/backend/SyncFlow/Dockerfile
     command: >
       bash -c "python src/manage.py makemigrations &&
                python src/manage.py migrate &&
