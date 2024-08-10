@@ -28,7 +28,7 @@ services:
                python src/manage.py migrate &&
                python src/manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - /home/tommy/backend/SyncFlow:/app
     ports:
       - "8000:8000"
     depends_on:
