@@ -78,6 +78,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://192.168.1.140:3000',
     'http://localhost:3001',
     'http://192.168.1.140:3001',
+    'http://85.202.195.116',
 ]
 
 ROOT_URLCONF = 'syncflow.urls'
