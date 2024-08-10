@@ -18,7 +18,7 @@ services:
 
   frontend:
     build:
-      context: /home/tiw/projects/SyncFlowFrontEnd/desktop
+      context: /home/tommy/frontend/SyncFlowFrontEnd/desktop
     networks:
       - dev
 

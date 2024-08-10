@@ -1,6 +1,3 @@
-# Ignore file settings.py
-#src/syncflow/settings.py
-
 # Enviroment variables
 .env
 access_token.txt
