@@ -17,6 +17,7 @@ django-filter = "^24.2"
 pytz = "^2024.1"
 amocrm-api = "^2.6.1"
 amocrm-api-wrapper = "^0.0.18"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 
