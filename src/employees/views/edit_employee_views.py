@@ -3,6 +3,7 @@ from users.models import CustomUser
 from employees.models import Employee
 from employees.serializers.employee_serializers import EmployeeSerializer
 
+
 class EmployeeUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
