@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/syncflow/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/serializers/password_change.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/serializers/password_change.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,6 +139,11 @@
           <url>file://$PROJECT_DIR$/src/b2c_client_orders/models.py</url>
           <line>6</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/employers/serializers/password_change.py</url>
+          <line>4</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
