@@ -4,6 +4,7 @@ from employees.models import Employee
 from employees.serializers.employee_serializers import EmployeeSerializer
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
+from b2c_client_orders.serializers.load_image_serializers import B2COrderImageSerializer
 
 
 class B2BOrderSerializer(serializers.ModelSerializer):
@@ -44,6 +45,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
     employer = serializers.PrimaryKeyRelatedField(read_only=True)
     assigned_employee_name = serializers.CharField(source='employee_name', read_only=True)
     assigned_employee_phone = serializers.CharField(source='employee_phone', read_only=True)
+    images = B2COrderImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = B2COrder
@@ -62,7 +64,8 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'report',
                   'assigned_employee_name',
                   'assigned_employee_phone',
-                  'assigned_employee_id'
+                  'assigned_employee_id',
+                  'images'
                   ]
 
     def create(self, validated_data):

@@ -5,3 +5,4 @@
 .env
 access_token.txt
 refresh_token.txt
+src/media
