@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  merge-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout frontend code
+      uses: actions/checkout@v2
+      with:
+        repository: tiwasted/SyncFlowFrontEnd
+        path: frontend
+
+    - name: Checkout backend code
+      uses: actions/checkout@2
+      with:
+        repository: tiwasted/SyncFlow
+        path: backend
+
+    - name: Set up Git
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+
+    - name: Merge test into deploy in frontend repo
+      run: |
+        cd frontend
+        git checkout deploy
+        git merge test --no-ff -m "Merge test into deploy"
+        git push origin deploy
+
+    - name: Merge test into deploy in backend repo
+      run: |
+        cd ../backend
+        git checkout deploy
+        git merge test --no-ff -m "Merge test into deploy"
+        git push origin deploy
+
+    - name: Deploy to Server
+      run: |
+        ssh user@server <<EOF
+        cd /path/to/project/frontend
+        git pull origin deploy
+        cd /path/to/project/backend
+        git pull origin deploy
+        cd /path/to/project
+        docker-compose down
+        docker-compose up --build -d
+        EOF
