@@ -29,26 +29,26 @@ jobs:
 
     - name: Merge test into deploy in frontend repo
       run: |
-        cd frontend
+        cd frontend/SyncFlowFrontEnd
         git checkout deploy
         git merge test --no-ff -m "Merge test into deploy"
         git push origin deploy
 
     - name: Merge test into deploy in backend repo
       run: |
-        cd ../backend
+        cd backend/SyncFlow
         git checkout deploy
         git merge test --no-ff -m "Merge test into deploy"
         git push origin deploy
 
     - name: Deploy to Server
       run: |
-        ssh user@server <<EOF
-        cd /path/to/project/frontend
+        ssh tommy@85.202.195.116 <<EOF
+        cd frontend/SyncFlowFrontEnd
         git pull origin deploy
-        cd /path/to/project/backend
+        cd backend/SyncFlow
         git pull origin deploy
-        cd /path/to/project
+        cd backend/SyncFlow
         docker-compose down
         docker-compose up --build -d
         EOF
