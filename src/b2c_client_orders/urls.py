@@ -1,8 +1,6 @@
 from django.urls import path
-# from .views.create_order_views import B2COrderCreateView
+from b2c_client_orders.views.image_views import B2COrderImageView
 
 urlpatterns = [
-    # path('create-order/', B2COrderCreateView.as_view(), name='b2c-order-create'),
-
-
+    path('orders/<int:order_id>/image/', B2COrderImageView.as_view(), name='order-image'),
 ]
