@@ -19,3 +19,12 @@ class B2COrder(AssignableOrder):
 
     def __str__(self):
         return self.order_name
+
+
+class B2COrderImage(models.Model):
+    order = models.ForeignKey(B2COrder, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='order_images/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for order {self.order.id}"
