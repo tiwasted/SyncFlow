@@ -9,9 +9,9 @@ class B2COrderImageView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, order_id):
-        # Получаем изображение, связанное с заказом
+        # Получаем заказ с указанным ID
         order = get_object_or_404(B2COrder, id=order_id)
-
+        # Находим изображение, связанные с заказом
         image = B2COrderImage.objects.filter(order=order).first()
 
         if image:
