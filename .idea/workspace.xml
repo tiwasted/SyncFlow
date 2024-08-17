@@ -4,15 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< HEAD
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx.conf" afterDir="false" />
     </list>
-=======
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="" />
->>>>>>> dev
+    <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/syncflow/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/urls.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -126,11 +126,7 @@
     <servers />
   </component>
   <component name="UnknownFeatures">
-<<<<<<< HEAD
     <option featureType="com.intellij.fileTypeFactory" implementationName="nginx.conf" />
-=======
-    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
->>>>>>> dev
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
