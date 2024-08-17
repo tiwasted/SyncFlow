@@ -24,6 +24,7 @@ class B2BOrderHistoryViewSet(viewsets.ModelViewSet):
 class B2COrderHistoryPagination(PageNumberPagination):
     page_size = 10  # Количество объектов на странице
     page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 class B2COrderHistoryViewSet(viewsets.ModelViewSet):

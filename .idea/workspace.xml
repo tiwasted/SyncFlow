@@ -123,11 +123,7 @@
     <servers />
   </component>
   <component name="UnknownFeatures">
-<<<<<<< HEAD
     <option featureType="com.intellij.fileTypeFactory" implementationName="nginx.conf" />
-=======
-    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
->>>>>>> dev
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
