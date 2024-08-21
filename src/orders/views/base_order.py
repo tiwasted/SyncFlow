@@ -3,14 +3,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.dateparse import parse_date
 
 from employers.models import Employer
 from employees.models import Employee
 from schedules.models import Schedule
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
-from orders.serializers.order_serializers import B2BOrderSerializer, B2COrderSerializer
 from orders.permissions import CanViewOrder
 
 
@@ -28,6 +26,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
+    # Назначение сотрудника на заказ
     @action(detail=True, methods=['post'])
     def assign_employee(self, request, pk=None):
         order = self.get_object()
@@ -56,6 +55,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
 
+    # Завершение заказа сотрудником
     @action(detail=True, methods=['post'])
     def complete_order(self, request, pk=None):
         order = self.get_object()
@@ -78,6 +78,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(order)
         return Response(serializer.data)
 
+    # Отмена заказа сотрудником
     @action(detail=True, methods=['post'])
     def cancel_order(self, request, pk=None):
         order = self.get_object()

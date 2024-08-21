@@ -45,6 +45,8 @@ class B2COrderSerializer(serializers.ModelSerializer):
     employer = serializers.PrimaryKeyRelatedField(read_only=True)
     assigned_employee_name = serializers.CharField(source='employee_name', read_only=True)
     assigned_employee_phone = serializers.CharField(source='employee_phone', read_only=True)
+    city = serializers.CharField(source='city.name', read_only=True)
+    country = serializers.CharField(source='city.country.name', read_only=True)
 
     class Meta:
         model = B2COrder
@@ -63,7 +65,9 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'report',
                   'assigned_employee_name',
                   'assigned_employee_phone',
-                  'assigned_employee_id'
+                  'assigned_employee_id',
+                  'city',
+                  'country'
                   ]
 
     def create(self, validated_data):

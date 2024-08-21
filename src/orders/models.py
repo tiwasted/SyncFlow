@@ -1,6 +1,24 @@
 from django.db import models
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class City(models.Model):
+    name = models.CharField(max_length=50)
+    country = models.ForeignKey(Country, null=False, on_delete=models.CASCADE, related_name='cities')
+
+    class Meta:
+        unique_together = ['name', 'country'] # Чтобы избежать дублирования городов с одинаковыми именами в разных странах
+
+    def __str__(self):
+        return f"{self.name}, {self.country.name}"
+
+
 class AssignableOrder(models.Model):
     STATUS_CHOICES = (
         ('in processing', 'В обработке'),
@@ -14,12 +32,12 @@ class AssignableOrder(models.Model):
     employee_name = models.CharField(max_length=100, blank=True, null=True)
     employee_phone = models.CharField(max_length=11, blank=True, null=True)
     report = models.TextField(blank=True, null=True)
+    city = models.ForeignKey('orders.City', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_orders')
+
 
     class Meta:
         abstract = True
 
-    def __str__(self):
-        return self.order_name
 
     def save(self, *args, **kwargs):
         if self.assigned_employee:

@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from users.models import CustomUser
-from employers.serializers.password_change import ChangePasswordSerializer
+from employers.serializers.password_change_serializers import ChangePasswordSerializer
 
 
 class ChangePasswordView(generics.UpdateAPIView):
