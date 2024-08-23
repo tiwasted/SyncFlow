@@ -9,6 +9,7 @@ from b2c_client_orders.serializers.load_image_serializers import B2COrderImageSe
 
 class B2BOrderSerializer(serializers.ModelSerializer):
     employer = serializers.PrimaryKeyRelatedField(read_only=True)
+    assigned_employees = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = B2BOrder
@@ -27,7 +28,8 @@ class B2BOrderSerializer(serializers.ModelSerializer):
                   'status',
                   'report',
                   'assigned_employee',
-                  'assigned_employee_id'
+                  # 'assigned_employee_id',
+                  'assigned_employees'
                  ]
 
     def create(self, validated_data):
@@ -65,7 +67,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'report',
                   'assigned_employee_name',
                   'assigned_employee_phone',
-                  'assigned_employee_id',
+                  # 'assigned_employee_id',
                   'city',
                   'country'
                   ]

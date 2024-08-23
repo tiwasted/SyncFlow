@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -32,6 +33,8 @@ class CityListView(APIView):
     def get(self, request, *args, **kwargs):
         cities = City.objects.all()
         serializer = CitySerializer(cities, many=True)
+        filter_backends = [DjangoFilterBackend]
+        filterset_fields = ['country__name']
         return Response(serializer.data)
 
     def delete(self, request, *args, **kwargs):

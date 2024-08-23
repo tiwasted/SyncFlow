@@ -26,29 +26,40 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
-    # Назначение сотрудника на заказ
+    # Назначение сотрудников на заказ
     @action(detail=True, methods=['post'])
     def assign_employee(self, request, pk=None):
         order = self.get_object()
-        employee_id = request.data.get('employee_id')
+        employee_ids = request.data.get('employee_ids')
 
-        if not employee_id:
-            return Response({"error": "Требуется ID сотрудника"}, status=status.HTTP_400_BAD_REQUEST)
+        # Если пришел один ID, преобразовываем его в список
+        if isinstance(employee_ids, int):
+            employee_ids = [employee_ids]
+        elif not employee_ids or not isinstance(employee_ids, list):
+            return Response({"error": "Требуется ID сотрудника или список ID сотрудников"}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            employee = Employee.objects.get(id=employee_id)
-        except Employee.DoesNotExist:
-            return Response({"error": "Сотрудник не найден"}, status=status.HTTP_404_NOT_FOUND)
-        # Назначение сотрудника
+        assigned_employees = []
+        for employee_id in employee_ids:
+            try:
+                employee = Employee.objects.get(id=employee_id)
+            except Employee.DoesNotExist:
+                return Response({"error": f"Сотрудник с ID {employee_id} не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Назначение сотрудника на заказ
         order.assign_employee(employee)
+        assigned_employees.append(employee)
 
+        # Создание записи в расписании
         if isinstance(order, B2BOrder):
             Schedule.objects.create(b2b_order=order, assigned_employee=employee)
         elif isinstance(order, B2COrder):
             Schedule.objects.create(b2c_order=order, assigned_employee=employee)
 
         serializer = self.get_serializer(order)
-        return Response(serializer.data)
+        return Response({
+            "order": serializer.data,
+            "assigned_employees": [employee.id for employee in assigned_employees]
+        })
 
     def get_object(self):
         obj = get_object_or_404(self.queryset, pk=self.kwargs["pk"])
