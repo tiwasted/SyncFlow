@@ -11,5 +11,13 @@ class Employer(models.Model):
     countries = models.ManyToManyField(Country, related_name='employers', blank=True)
     cities = models.ManyToManyField(City, related_name='employers', blank=True)
 
+
+class EmployerCity(models.Model):
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='employer_city_relations')
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('employer', 'city')
+
     def __str__(self):
-        return self.company_name
+        return f"{self.employer.company_name} - {self.city.name}"
