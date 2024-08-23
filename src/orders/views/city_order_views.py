@@ -1,16 +1,16 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from orders.models import Country, City
 from orders.serializers.city_order_serializers import CountrySerializer, CitySerializer
 
 
-class CountryListView(APIView):
-    def get(self, request, *args, **kwargs):
-        countries = Country.objects.all()
-        serializer = CountrySerializer(countries, many=True)
-        return Response(serializer.data)
+# class CountryListView(APIView):
+#     def get(self, request, *args, **kwargs):
+#         countries = Country.objects.all()
+#         serializer = CountrySerializer(countries, many=True)
+#         return Response(serializer.data)
 
     # def delete(self, request, *args, **kwargs):
     #     try:
@@ -29,20 +29,20 @@ class CountryListView(APIView):
     #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CityListView(APIView):
-    def get(self, request, *args, **kwargs):
-        country_id = kwargs.get('country_id')
-        if not country_id:
-            return Response({'error': 'ID страны не указан'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Фильтрация городов по country_id
-        cities = City.objects.filter(country_id=country_id)
-        if not cities:
-            return Response({'message': 'No cities found for the specified country'}, status=status.HTTP_404_NOT_FOUND)
-
-        cities = City.objects.all()
-        serializer = CitySerializer(cities, many=True)
-        return Response(serializer.data)
+# class CityListView(APIView):
+#     def get(self, request, *args, **kwargs):
+#         country_id = kwargs.get('country_id')
+#         if not country_id:
+#             return Response({'error': 'ID страны не указан'}, status=status.HTTP_400_BAD_REQUEST)
+#
+#         # Фильтрация городов по country_id
+#         cities = City.objects.filter(country_id=country_id)
+#         if not cities:
+#             return Response({'message': 'Для указанной страны не найдено ни одного города.'}, status=status.HTTP_404_NOT_FOUND)
+#
+#         cities = City.objects.all()
+#         serializer = CitySerializer(cities, many=True)
+#         return Response(serializer.data)
 
     # def delete(self, request, *args, **kwargs):
     #     try:
@@ -52,3 +52,15 @@ class CityListView(APIView):
     #
     #     city.delete()
     #     return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CountryListView(generics.ListAPIView):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+
+
+class CityByCountryView(generics.ListAPIView):
+    serializer_class = CitySerializer
+
+    def get_queryset(self):
+        country_id = self.kwargs.get('country_id')
+        return City.objects.filter(country_id=country_id)
