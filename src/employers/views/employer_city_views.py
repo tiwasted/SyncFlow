@@ -1,43 +1,46 @@
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from employers.models import Employer, EmployerCity
-from employers.serializers.employer_city_serializer import EmployerCitySerializer
-from orders.models import City
+from orders.models import Country, City
+from orders.serializers.city_order_serializers import CountrySerializer, CitySerializer, CountryWithCitiesSerializer
 
 
-class EmployerCitiesView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        try:
-            employer = Employer.objects.get(user=request.user)
-        except Employer.DoesNotExist:
-            return Response(status=404)
-
-        cities = EmployerCity.objects.filter(employer=employer)
-        serializer = EmployerCitySerializer(cities, many=True)
-        return Response(serializer.data)
-
-
-class EmployerCityManagementView(APIView):
+class AddCountriesView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        try:
-            employer = Employer.objects.get(user=request.user)
-        except Employer.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        employer = request.user.employer_profile
+        country_ids = request.data.get('country_ids', [])
+        countries = Country.objects.filter(id__in=country_ids)
+        employer.selected_countries.add(*countries)
+        return Response({"status": "Страна или страны успешно добавлены"})
 
-        city_id = request.data.get('city_id')
-        if not city_id:
-            return Response({"detail": "Требуется ID города"}, status=status.HTTP_400_BAD_REQUEST)
+class AddCitiesView(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-        try:
-            city = City.objects.get(id=city_id)
-        except City.DoesNotExist:
-            return Response({"detail": "Город не найден"}, status=status.HTTP_404_NOT_FOUND)
+    def post(self, request, *args, **kwargs):
+        employer = request.user.employer_profile
+        city_ids = request.data.get('city_ids', [])
+        cities = City.objects.filter(id__in=city_ids)
 
-        EmployerCity.objects.get_or_create(employer=employer, city=city)
-        return Response({"detail": "Город успешно добавлен."}, status=status.HTTP_201_CREATED)
+
+        selected_countries = employer.selected_countries.all()
+        if not cities.filter(country__in=selected_countries).exists():
+            return Response({"status": "Некоторые города не относятся к выбранным странам"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Добавление городов
+        employer.selected_cities.add(*cities)
+        return Response({"status": "Город или города успешно добавлены"})
+
+
+class AddedCountriesWithCitiesView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CountryWithCitiesSerializer
+
+    def get(self, request, *args, **kwargs):
+        employer = request.user.employer_profile
+        # Получите страны, которые выбрал пользователь
+        selected_countries = employer.selected_countries.prefetch_related('cities')
+        # Передаем контекст в сериализатор
+        serializer = self.get_serializer(selected_countries, many=True, context={'request': request})
+        return Response(serializer.data)
