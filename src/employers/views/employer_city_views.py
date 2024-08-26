@@ -1,4 +1,4 @@
-from rest_framework import status, permissions, generics
+from rest_framework import status, permissions, generics, views
 from rest_framework.response import Response
 
 from orders.models import Country, City
@@ -44,3 +44,16 @@ class AddedCountriesWithCitiesView(generics.ListAPIView):
         # Передаем контекст в сериализатор
         serializer = self.get_serializer(selected_countries, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+class SelectCityView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        city_id = request.data.get('city_id')
+        try:
+            city = City.objects.get(id=city_id, employers=request.user.employer_profile)
+            request.session['selected_city_id'] = city.id
+            return Response({"status": "City selected successfully"}, status=200)
+        except City.DoesNotExist:
+            return Response({"error": "City not found or not authorized"}, status=404)
