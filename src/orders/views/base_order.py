@@ -4,12 +4,11 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 
-from employers.models import Employer
+from employers.models import Employer, EmployerCityAssignment
 from employees.models import Employee
 from schedules.models import Schedule
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
-from orders.models import City
 from orders.permissions import CanViewOrder
 
 
@@ -24,13 +23,22 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         except Employer.DoesNotExist:
             return self.queryset.none()
 
-    # def perform_create(self, serializer):
-    #     selected_city_id = self.request.session.get('selected_city_id')
-    #     if selected_city_id:
-    #         city = City.objects.get(id=selected_city_id)
-    #         serializer.save(city=city, employer=self.request.user.employer_profile)
-    #     else:
-    #         serializer.save(employer=self.request.user.employer_profile)
+    def perform_create(self, serializer):
+        user = self.request.user
+        employer = user.employer_profile
+
+        # Получаем основной город из EmployerCityAssignment
+        primary_city_assignment = EmployerCityAssignment.objects.filter(
+            employer=employer,
+            is_primary=True
+        ).first()
+
+        if primary_city_assignment:
+            city = primary_city_assignment.city
+            serializer.save(city=city, employer=employer)
+        else:
+            serializer.save(employer=employer)
+        # serializer.save()
 
     # Назначение сотрудников на заказ
     @action(detail=True, methods=['post'])

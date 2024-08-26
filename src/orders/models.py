@@ -28,7 +28,7 @@ class AssignableOrder(models.Model):
     )
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in processing')
-    assigned_employee = models.ManyToManyField('employees.Employee', blank=True, related_name='%(class)s_assigned_orders')
+    assigned_employee = models.ForeignKey('employees.Employee', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_assigned_orders')
     employee_name = models.CharField(max_length=100, blank=True, null=True)
     employee_phone = models.CharField(max_length=11, blank=True, null=True)
     report = models.TextField(blank=True, null=True)
