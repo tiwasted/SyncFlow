@@ -30,6 +30,22 @@ class B2COrderViewSet(BaseOrderViewSet):
         except Employer.DoesNotExist:
             return B2COrder.objects.none()
 
+    def perform_create(self, serializer):
+        user = self.request.user
+        employer = user.employer_profile
+
+        # Получаем основной город из EmployerCityAssignment
+        primary_city_assignment = EmployerCityAssignment.objects.filter(
+            employer=employer,
+            is_primary=True
+        ).first()
+
+        if primary_city_assignment:
+            city = primary_city_assignment.city
+            serializer.save(city=city, employer=employer)
+        else:
+            serializer.save(employer=employer)
+
     # def get_queryset(self):
     #     employer = self.request.user.employer_profile
     #     return self.queryset.filter(employer=employer)
