@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 
 from users.validators import validate_password
-from employees.models import Employee
 from employers.models import Manager
 
 User = get_user_model()
@@ -41,3 +40,14 @@ class ManagerCreateSerializer(serializers.ModelSerializer):
                 employer=employer
             )
             return user
+
+
+class ManagerSerializer(serializers.ModelSerializer):
+    role = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Manager
+        fields = ['id', 'first_name', 'last_name', 'employer', 'role']
+
+    def get_role(self, obj):
+        return obj.user.role

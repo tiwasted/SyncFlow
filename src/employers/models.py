@@ -37,3 +37,14 @@ class Manager(models.Model):
 
     def __str__(self):
         return f"Manager: {self.first_name}"
+
+
+class ManagerCityAssignment(models.Model):
+    manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name='city_assignments')
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('manager', 'city')
+
+    def __str__(self):
+        return f"{self.manager.user.phone} - {self.city.name}"

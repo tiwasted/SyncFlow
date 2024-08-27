@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from b2c_client_orders.models import B2COrder
-from employers.models import Employer, EmployerCityAssignment
+from employers.models import EmployerCityAssignment, ManagerCityAssignment
 from orders.views.base_order import BaseOrderViewSet
 from orders.serializers.order_serializers import B2COrderSerializer
 
@@ -12,19 +12,19 @@ class B2COrderViewSet(BaseOrderViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        try:
+
+        if hasattr(user, 'employer_profile'):
             employer = user.employer_profile
 
-            # Получение основного города через таблицу EmployerCityAssignment
-            primary_city_assignment = EmployerCityAssignment.objects.filter(
-                employer=employer,
-                is_primary=True
-            ).first()
+            employer_cities = EmployerCityAssignment.objects.filter(employer=employer).values_list('city', flat=True)
 
-            if primary_city_assignment:
-                primary_city = primary_city_assignment.city
-                return B2COrder.objects.filter(city=primary_city)
-            else:
-                return B2COrder.objects.none()
-        except Employer.DoesNotExist:
-            return B2COrder.objects.none()
+            return B2COrder.objects.filter(city__in=employer_cities)
+
+        elif hasattr(user, 'manager_profile'):
+            manager = user.manager_profile
+
+            manager_cities = ManagerCityAssignment.objects.filter(manager=manager).values_list('city', flat=True)
+
+            return B2COrder.objects.filter(city__in=manager_cities)
+
+        return B2COrder.objects.none()

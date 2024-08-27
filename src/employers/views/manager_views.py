@@ -1,42 +1,72 @@
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework import status, permissions
 from rest_framework.views import APIView
-from rest_framework.generics import get_object_or_404
+from django.contrib.auth import get_user_model
 
+from users.models import CustomUser
 from employers.models import Manager
-from orders.models import City
-from orders.serializers.city_order_serializers import CitySerializer
+
+from employers.serializers.manager_serializers import ManagerCreateSerializer, ManagerSerializer
+
+User = get_user_model()
 
 
-# Назначение города менеджеру
-class AssignCityToManagerView(APIView):
-    def post(self, request, manager_id):
-        manager = get_object_or_404(Manager, id=manager_id)
-        city_id = request.data.get('city_id')
-        city = get_object_or_404(City, id=city_id)
+# Создание менеджеров через Работодателя
+class ManagerCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-        if city not in manager.employer.selected_cities.all():
-            return Response(data={"error": "Этот город недоступен для данного менеджера"}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        if request.user.role != 'employer':
+            return Response({"error": "Только Employer может создавать Employee."},
+                            status=status.HTTP_403_FORBIDDEN)
 
-        manager.selected_city = city
-        manager.save()
-        return Response(data={"success": "Город успешно привязан к менеджеру"})
+        if not hasattr(request.user, 'employer_profile'):
+            return Response({"error": "Этот пользователь не связан с профилем работодателя."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        employer = request.user.employer_profile
+        print("Работодатель из профиля пользователя:", employer)
+        serializer = ManagerCreateSerializer(data=request.data, context={'employer': employer})
+        if serializer.is_valid():
+            user = serializer.save(employer=employer)
+            return Response({"message": "Manager создан успешно"},
+                            status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ManagerCitiesView(APIView):
-    permission_classes = [permissions.IsAuthenticated]  # Только аутентифицированные пользователи
+# Чтение менеджеров для Работодателя
+class ManagerListView(generics.ListAPIView):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, manager_id):
-        manager = get_object_or_404(Manager, id=manager_id)
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'employer_profile'):
+            employer = user.employer_profile
+            return Manager.objects.filter(employer=employer)
+        return Manager.objects.none()
 
-        # Проверяем, что текущий пользователь является этим менеджером
-        if request.user != manager.user:
-            return Response({"error": "Вы не можете просматривать города другого менеджера"}, status=status.HTTP_403_FORBIDDEN)
 
-        # Получаем города, доступные работодателю менеджера
-        # cities = manager.employer.selected_cities.all()
-        filter_cities = manager.employer.selected_cities.all()
+# Редактирование менеджеров через Работодателя
+class ManagerUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-        # Сериализуем города и возвращаем ответ
-        serializer = CitySerializer(filter_cities, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == CustomUser.EMPLOYER:
+            return Manager.objects.filter(employer=user.employer_profile)
+        return Manager.objects.none()
+
+
+# Удаление менеджеров через Работодателя
+class ManagerDeleteView(generics.DestroyAPIView):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'pk'
+
+    def perform_destroy(self, instance):
+        instance.delete()

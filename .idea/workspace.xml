@@ -6,12 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/b2c_client_orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2c_client_orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/serializers/create_manager_serializers.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/employers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employers/views/employer_city_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/views/employer_city_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employers/views/set_city_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/views/set_city_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/views/create_manager_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/views/manager_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/views/assign_city_to_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/orders/views/b2c_order_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/b2c_order_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/views/base_order.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/base_order.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +57,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/tiw/projects/X-MVP-server&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RunManager" selected="Python.amo_integration">
