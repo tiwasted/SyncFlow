@@ -3,7 +3,7 @@ from .views.registration_employer_views import EmployerRegistrationView
 from .views.password_change_views import ChangePasswordView
 from .views.employer_views import EmployerView
 from .views.role_views import RoleListView, RoleCreateView
-from .views.employer_city_views import AddCountriesView, AddCitiesView, AddedCountriesWithCitiesView, AvailableCitiesView
+from .views.employer_city_views import AddCountriesView, AddCitiesView, AvailableCitiesView, ListCitiesView
 from .views.manager_views import ManagerListView, ManagerDetailView, ManagerUpdateView, ManagerDeleteView
 from .views.assign_city_to_manager import AssignCityToManagerView, ManagerCitiesView
 from .views.set_city_views import SetPrimaryCityView, GetPrimaryCityView
@@ -16,7 +16,7 @@ urlpatterns = [
 
     path('add-countries/', AddCountriesView.as_view(), name='add-countries'),
     path('add-cities/', AddCitiesView.as_view(), name='add-cities'),
-    path('added-cities/', AddedCountriesWithCitiesView.as_view(), name='added-countries-with-cities'),
+    # path('added-cities/', AddedCountriesWithCitiesView.as_view(), name='added-countries-with-cities'),
 
     path('roles/', RoleListView.as_view(), name='roles-list'),
     path('available-cities/', AvailableCitiesView.as_view(), name='available-cities'),
@@ -32,4 +32,5 @@ urlpatterns = [
 
     path('select-primary-city/', SetPrimaryCityView.as_view(), name='select-primary-city'),
     path('get-primary-city/', GetPrimaryCityView.as_view(), name='get-primary-city'),
+    path('dashboard/list-cities/', ListCitiesView.as_view(), name='list-cities'),
 ]

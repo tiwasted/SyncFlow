@@ -1,11 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework import status, permissions, generics
 from rest_framework.response import Response
+from django.db.models import Q
 
 from users.models import CustomUser
 from employers.models import EmployerCityAssignment, ManagerCityAssignment, Employer, Manager
 from orders.models import Country, City
-from orders.serializers.city_order_serializers import CountryWithCitiesSerializer
+from orders.serializers.city_order_serializers import CountryWithCitiesSerializer, CitySerializer
 
 
 class AddCountriesView(generics.UpdateAPIView):
@@ -75,9 +76,41 @@ class CityService:
         return City.objects.filter(id__in=set(employer_cities) | set(manager_cities_ids))
 
 
-class AddedCountriesWithCitiesView(generics.ListAPIView):
+# class AddedCountriesWithCitiesView(generics.ListAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = CountryWithCitiesSerializer
+#
+#     def get_queryset(self):
+#         user = self.request.user
+#
+#         if user.role == CustomUser.EMPLOYER:
+#             try:
+#                 employer = user.employer_profile
+#                 all_cities = CityService.get_cities_for_employer(employer)
+#             except Employer.DoesNotExist:
+#                 return Response({"error": "У этого пользователя нет профиля Employer."},
+#                                 status=status.HTTP_404_NOT_FOUND)
+#
+#         elif user.role == CustomUser.MANAGER:
+#             try:
+#                 manager = user.manager_profile
+#                 all_cities = CityService.get_cities_for_manager(manager)
+#             except Manager.DoesNotExist:
+#                 return Response({"error": "У этого пользователя нет профиля Manager."},
+#                                 status=status.HTTP_404_NOT_FOUND)
+#
+#         else:
+#             return Response({"error": "Пользователь не является ни Employer, ни Manager."},
+#                             status=status.HTTP_403_FORBIDDEN)
+#
+#     def list(self, request, *args, **kwargs):
+#         queryset = self.get_queryset()
+#         serializer = self.get_serializer(queryset, many=True, context={'request': request})
+#         return Response(serializer.data)
+
+class ListCitiesView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = CountryWithCitiesSerializer
+    serializer_class = CitySerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -85,30 +118,34 @@ class AddedCountriesWithCitiesView(generics.ListAPIView):
         if user.role == CustomUser.EMPLOYER:
             try:
                 employer = user.employer_profile
-                all_cities = CityService.get_cities_for_employer(employer)
+                return employer.selected_cities.all()
             except Employer.DoesNotExist:
-                return Response({"error": "У этого пользователя нет профиля Employer."},
-                                status=status.HTTP_404_NOT_FOUND)
+                return City.objects.none()
 
         elif user.role == CustomUser.MANAGER:
             try:
                 manager = user.manager_profile
-                all_cities = CityService.get_cities_for_manager(manager)
+                return manager.cities.all()
             except Manager.DoesNotExist:
-                return Response({"error": "У этого пользователя нет профиля Manager."},
-                                status=status.HTTP_404_NOT_FOUND)
+                return City.objects.none()
 
         else:
-            return Response({"error": "Пользователь не является ни Employer, ни Manager."},
-                            status=status.HTTP_403_FORBIDDEN)
+            return City.objects.none()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
 
+        role = "unknown"
+        if request.user.role == CustomUser.EMPLOYER:
+            role = "employer"
+        elif request.user.role == CustomUser.MANAGER:
+            role = "manager"
 
-
+        return Response({
+            "role": role,
+            "cities": serializer.data
+        })
 
 
 
@@ -131,3 +168,5 @@ class AddedCountriesWithCitiesView(generics.ListAPIView):
 #         # Передаем контекст в сериализатор
 #         serializer = self.get_serializer(selected_countries, many=True, context={'request': request})
 #         return Response(serializer.data)
+
+
