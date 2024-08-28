@@ -1,7 +1,9 @@
+from rest_framework.views import APIView
 from rest_framework import status, permissions, generics
 from rest_framework.response import Response
 
-from employers.models import EmployerCityAssignment
+from users.models import CustomUser
+from employers.models import EmployerCityAssignment, ManagerCityAssignment, Employer, Manager
 from orders.models import Country, City
 from orders.serializers.city_order_serializers import CountryWithCitiesSerializer
 
@@ -15,6 +17,7 @@ class AddCountriesView(generics.UpdateAPIView):
         countries = Country.objects.filter(id__in=country_ids)
         employer.selected_countries.add(*countries)
         return Response({"status": "Страна или страны успешно добавлены"})
+
 
 class AddCitiesView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -38,14 +41,93 @@ class AddCitiesView(generics.UpdateAPIView):
         return Response({"status": "Город или города успешно добавлены"})
 
 
+class AvailableCitiesView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        employer = request.user.employer_profile
+        cities = employer.selected_cities.all()
+        city_data = [{'id': city.id, 'name': city.name} for city in cities]
+
+        return Response({
+            "cities": city_data
+        }, status=status.HTTP_200_OK)
+
+
+class CityService:
+    @staticmethod
+    def get_cities_for_employer(employer):
+        employer_cities = employer.selected_cities.values_list('id', flat=True)
+
+        manager_cities = City.objects.filter(
+            employercityassignments__employer=employer
+        ).values_list('id', flat=True).distinct()
+
+        return City.objects.filter(id__in=set(employer_cities) | set(manager_cities))
+
+    @staticmethod
+    def get_cities_for_manager(manager):
+        employer_cities = manager.employer.selected_cities.values_list('id', flat=True)
+
+        manager_cities_ids = ManagerCityAssignment.objects.filter(
+            manager=manager
+        ).values_list('city_id', flat=True)
+
+        return City.objects.filter(id__in=set(employer_cities) | set(manager_cities_ids))
+
+
 class AddedCountriesWithCitiesView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CountryWithCitiesSerializer
 
-    def get(self, request, *args, **kwargs):
-        employer = request.user.employer_profile
-        # Получите страны, которые выбрал пользователь
-        selected_countries = employer.selected_countries.prefetch_related('cities')
-        # Передаем контекст в сериализатор
-        serializer = self.get_serializer(selected_countries, many=True, context={'request': request})
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.role == CustomUser.EMPLOYER:
+            try:
+                employer = user.employer_profile
+                all_cities = CityService.get_cities_for_employer(employer)
+            except Employer.DoesNotExist:
+                return Response({"error": "У этого пользователя нет профиля Employer."},
+                                status=status.HTTP_404_NOT_FOUND)
+
+        elif user.role == CustomUser.MANAGER:
+            try:
+                manager = user.manager_profile
+                all_cities = CityService.get_cities_for_manager(manager)
+            except Manager.DoesNotExist:
+                return Response({"error": "У этого пользователя нет профиля Manager."},
+                                status=status.HTTP_404_NOT_FOUND)
+
+        else:
+            return Response({"error": "Пользователь не является ни Employer, ни Manager."},
+                            status=status.HTTP_403_FORBIDDEN)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+
+
+
+
+        # # Получаем страны, связанные с этими городами
+        # selected_countries = Country.objects.filter(cities__in=all_cities).distinct().prefetch_related('cities')
+        #
+        # # Передаем контекст в сериализатор
+        # serializer = self.get_serializer(selected_countries, many=True, context={'request': request})
+        # return Response(serializer.data)
+
+
+# class AddedCountriesWithCitiesView(generics.ListAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = CountryWithCitiesSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         employer = request.user.employer_profile
+#         # Получите страны, которые выбрал пользователь
+#         selected_countries = employer.selected_countries.prefetch_related('cities')
+#         # Передаем контекст в сериализатор
+#         serializer = self.get_serializer(selected_countries, many=True, context={'request': request})
+#         return Response(serializer.data)

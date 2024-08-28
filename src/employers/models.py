@@ -34,6 +34,7 @@ class Manager(models.Model):
     last_name = models.CharField(max_length=50)
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='managers')
     is_active = models.BooleanField(default=True)
+    cities = models.ManyToManyField(City, related_name='managers')
 
     def __str__(self):
         return f"Manager: {self.first_name}"

@@ -2,8 +2,9 @@ from django.urls import path
 from .views.registration_employer_views import EmployerRegistrationView
 from .views.password_change_views import ChangePasswordView
 from .views.employer_views import EmployerView
-from .views.employer_city_views import AddCountriesView, AddCitiesView, AddedCountriesWithCitiesView
-from .views.manager_views import ManagerCreateView, ManagerListView, ManagerUpdateView, ManagerDeleteView
+from .views.role_views import RoleListView, RoleCreateView
+from .views.employer_city_views import AddCountriesView, AddCitiesView, AddedCountriesWithCitiesView, AvailableCitiesView
+from .views.manager_views import ManagerListView, ManagerUpdateView, ManagerDeleteView
 from .views.assign_city_to_manager import AssignCityToManagerView, ManagerCitiesView
 from .views.set_city_views import SetPrimaryCityView, GetPrimaryCityView
 
@@ -17,7 +18,10 @@ urlpatterns = [
     path('add-cities/', AddCitiesView.as_view(), name='add-cities'),
     path('added-countries-with-cities/', AddedCountriesWithCitiesView.as_view(), name='added-countries-with-cities'),
 
-    path('create-manager/', ManagerCreateView.as_view(), name='manager-create'),
+    path('roles/', RoleListView.as_view(), name='roles-list'),
+    path('available-cities/', AvailableCitiesView.as_view(), name='available-cities'),
+    path('create-role/', RoleCreateView.as_view(), name='create-role'),
+
     path('managers/', ManagerListView.as_view(), name='manager-list'),
     path('manager/edit/<int:pk>/', ManagerUpdateView.as_view(), name='manager-edit'),
     path('manager/<int:pk>/delete/', ManagerDeleteView.as_view(), name='manager-delete'),

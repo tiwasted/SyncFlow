@@ -28,6 +28,7 @@ class AssignCityToManagerView(APIView):
         return Response(data={"success": "Город успешно привязан к менеджеру"}, status=status.HTTP_200_OK)
 
 
+# Получение городов менеджера
 class ManagerCitiesView(APIView):
     permission_classes = [permissions.IsAuthenticated]  # Только аутентифицированные пользователи
 
