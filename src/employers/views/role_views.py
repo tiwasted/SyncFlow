@@ -15,13 +15,15 @@ class RoleListView(APIView):
 
 
 class RoleCreateView(APIView):
+    serializer_class = RoleCreateSerializer
+
     def post(self, request):
         serializer = RoleCreateSerializer(data=request.data, context={'employer': request.user.employer_profile})
 
         if serializer.is_valid():
             user = serializer.save()
             return Response({
-                "message": "Пользователь создан успешно",
+                "message": "Пользователь успешно создан",
                 "user_id": user.id,
                 "role": user.role},
                 status=status.HTTP_201_CREATED)

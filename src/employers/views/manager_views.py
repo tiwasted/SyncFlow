@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from users.models import CustomUser
 from employers.models import Manager
 
-from employers.serializers.manager_serializers import ManagerSerializer
+from employers.serializers.manager_serializers import ManagerSerializer, ManagerSerializerUpdate
 
 User = get_user_model()
 
@@ -24,10 +24,17 @@ class ManagerListView(generics.ListAPIView):
         return Manager.objects.none()
 
 
+class ManagerDetailView(generics.RetrieveAPIView):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'pk'
+
+
 # Редактирование менеджеров через Работодателя
 class ManagerUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Manager.objects.all()
-    serializer_class = ManagerSerializer
+    serializer_class = ManagerSerializerUpdate
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):

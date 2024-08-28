@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.db import transaction
 
+from orders.serializers.city_order_serializers import CitySerializer
 from users.validators import validate_password
 from users.models import CustomUser
 from employers.models import Manager
@@ -45,8 +46,17 @@ class ManagerCreateSerializer(serializers.ModelSerializer):
             return user
 
 
-# Сериализатор для менеджеров
 class ManagerSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(source='user.phone')
+    cities = CitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Manager
+        fields = ['id', 'phone', 'first_name', 'last_name', 'cities']
+
+
+# Сериализатор для менеджеров
+class ManagerSerializerUpdate(serializers.ModelSerializer):
     phone = serializers.CharField(write_only=True, required=False)
 
     class Meta:
@@ -71,6 +81,3 @@ class ManagerSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
-
-    # def get_role(self, obj):
-    #     return obj.user.role
