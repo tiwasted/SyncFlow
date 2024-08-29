@@ -43,6 +43,7 @@ class Manager(models.Model):
 class ManagerCityAssignment(models.Model):
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name='city_assignments')
     city = models.ForeignKey(City, on_delete=models.CASCADE)
+    is_primary = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('manager', 'city')

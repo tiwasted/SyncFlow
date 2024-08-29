@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from employers.models import Employer
+from users.models import CustomUser
+from employers.models import Employer, Manager
 from employees.models import Employee
 from employees.serializers.employee_serializers import EmployeeSerializer
 from b2b_client_orders.models import B2BOrder
@@ -45,6 +46,7 @@ class B2BOrderSerializer(serializers.ModelSerializer):
 
 class B2COrderSerializer(serializers.ModelSerializer):
     employer = serializers.PrimaryKeyRelatedField(read_only=True)
+    manager = serializers.PrimaryKeyRelatedField(read_only=True)
     assigned_employee_name = serializers.CharField(source='employee_name', read_only=True)
     assigned_employee_phone = serializers.CharField(source='employee_phone', read_only=True)
     city = serializers.CharField(source='city.name', read_only=True)
@@ -54,6 +56,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
         model = B2COrder
         fields = ['id',
                   'employer',
+                  'manager',
                   'order_name',
                   'order_date',
                   'order_time',
@@ -67,17 +70,9 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'report',
                   'assigned_employee_name',
                   'assigned_employee_phone',
-                  # 'assigned_employee_id',
                   'city',
                   'country'
                   ]
 
     def create(self, validated_data):
-        user = self.context['request'].user
-        try:
-            employer = user.employer_profile
-        except Employer.DoesNotExist:
-            raise serializers.ValidationError("Пользователь не связан с работодателем.")
-
-        validated_data['employer'] = employer
-        return super().create(validated_data)
+        return B2COrder.objects.create(**validated_data)

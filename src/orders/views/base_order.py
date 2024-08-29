@@ -2,43 +2,49 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
-from employers.models import Employer, EmployerCityAssignment
 from employees.models import Employee
 from schedules.models import Schedule
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
-from orders.permissions import CanViewOrder
+from orders.permissions import CanViewOrder, RoleBasedPermission
 
 
 class BaseOrderViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, CanViewOrder]
+    permission_classes = [permissions.IsAuthenticated, CanViewOrder, RoleBasedPermission]
 
-    def get_queryset(self):
-        user = self.request.user
-        try:
-            employer = user.employer_profile
-            return self.queryset.filter(employer=employer, status='in processing')
-        except Employer.DoesNotExist:
-            return self.queryset.none()
 
     def perform_create(self, serializer):
         user = self.request.user
-        employer = user.employer_profile
 
-        # Получаем основной город из EmployerCityAssignment
-        primary_city_assignment = EmployerCityAssignment.objects.filter(
-            employer=employer,
-            is_primary=True
-        ).first()
+        if hasattr(user, 'manager_profile'):
+            manager = user.manager_profile
+            primary_city_assignment = manager.city_assignments.filter(is_primary=True).first()
+            primary_city = primary_city_assignment.city if primary_city_assignment else None
+            serializer.save(manager=manager, employer=manager.employer, city=primary_city)
 
-        if primary_city_assignment:
-            city = primary_city_assignment.city
-            serializer.save(city=city, employer=employer)
+        elif hasattr(user, 'employer_profile'):
+            employer = user.employer_profile
+            primary_city_assignment = employer.city_assignments.filter(is_primary=True).first()
+            primary_city = primary_city_assignment.city if primary_city_assignment else None
+            serializer.save(employer=employer, city=primary_city)
+
         else:
+            raise ValidationError("Невозможно создать заказ: пользователь не является работодателем или менеджером.")
+
+    def perform_update(self, serializer):
+        user = self.request.user
+
+        if hasattr(user, 'manager_profile'):
+            manager = user.manager_profile
+            serializer.save(manager=manager, employer=manager.employer)
+        elif hasattr(user, 'employer_profile'):
+            employer = user.employer_profile
             serializer.save(employer=employer)
-        # serializer.save()
+        else:
+            serializer.save()
+
 
     # Назначение сотрудников на заказ
     @action(detail=True, methods=['post'])

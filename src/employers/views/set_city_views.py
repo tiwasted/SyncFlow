@@ -8,24 +8,6 @@ from employers.serializers.employer_city_serializer import SetPrimaryCitySeriali
 
 
 # API для выбора основного города
-# class SetPrimaryCityView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
-#
-#     def post(self, request, *args, **kwargs):
-#         city_id = request.data.get('city_id')
-#         employer = request.user.employer_profile
-#
-#         # Убираем статус основного города у всех записей
-#         employer.city_assignments.update(is_primary=False)
-#
-#         # Устанавливаем выбранный город как основной
-#         assignment = get_object_or_404(EmployerCityAssignment, employer=employer, city_id=city_id)
-#         assignment.is_primary = True
-#         assignment.save()
-#
-#         return Response({"status": "Основной город успешно изменен."}, status=status.HTTP_200_OK)
-
-
 class SetPrimaryCityView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = SetPrimaryCitySerializer
@@ -34,12 +16,16 @@ class SetPrimaryCityView(APIView):
         city_id = request.data.get('city_id')
         user = request.user
 
+        if not city_id:
+            return Response({"error": "Необходимо указать ID города."},
+                            status=status.HTTP_400_BAD)
+
         if user.role == 'employer':
             employer = user.employer_profile
             # Убираем статус основного города у всех записей
             employer.city_assignments.update(is_primary=False)
             # Устанавливаем выбранный город как основной
-            assignment = get_object_or_404(EmployerCityAssignment, employer=employer, city_id=city_id)
+            assignment, created = EmployerCityAssignment.objects.get_or_create(employer=employer, city_id=city_id)
             assignment.is_primary = True
             assignment.save()
         elif user.role == 'manager':
@@ -47,7 +33,7 @@ class SetPrimaryCityView(APIView):
             # Убираем статус основного города у всех записей
             manager.city_assignments.update(is_primary=False)
             # Устанавливаем выбранный город как основной
-            assignment = get_object_or_404(ManagerCityAssignment, manager=manager, city_id=city_id)
+            assignment, created = ManagerCityAssignment.objects.get_or_create(manager=manager, city_id=city_id)
             assignment.is_primary = True
             assignment.save()
         else:
