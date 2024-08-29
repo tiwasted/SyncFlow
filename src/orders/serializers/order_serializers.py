@@ -1,8 +1,10 @@
 from rest_framework import serializers
+
+from orders.models import AssignableOrder
 from users.models import CustomUser
 from employers.models import Employer, Manager
 from employees.models import Employee
-from employees.serializers.employee_serializers import EmployeeSerializer
+from employees.serializers.employee_serializers import EmployeeSerializer, EmployeeInfoSerializer
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
 from b2c_client_orders.serializers.load_image_serializers import B2COrderImageSerializer
@@ -10,7 +12,7 @@ from b2c_client_orders.serializers.load_image_serializers import B2COrderImageSe
 
 class B2BOrderSerializer(serializers.ModelSerializer):
     employer = serializers.PrimaryKeyRelatedField(read_only=True)
-    assigned_employees = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # assigned_employees = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = B2BOrder
@@ -28,7 +30,7 @@ class B2BOrderSerializer(serializers.ModelSerializer):
                   'created_at',
                   'status',
                   'report',
-                  'assigned_employee',
+                  # 'assigned_employee',
                   # 'assigned_employee_id',
                   'assigned_employees'
                  ]
@@ -47,10 +49,8 @@ class B2BOrderSerializer(serializers.ModelSerializer):
 class B2COrderSerializer(serializers.ModelSerializer):
     employer = serializers.PrimaryKeyRelatedField(read_only=True)
     manager = serializers.PrimaryKeyRelatedField(read_only=True)
-    assigned_employee_name = serializers.CharField(source='employee_name', read_only=True)
-    assigned_employee_phone = serializers.CharField(source='employee_phone', read_only=True)
     city = serializers.CharField(source='city.name', read_only=True)
-    country = serializers.CharField(source='city.country.name', read_only=True)
+    employee_info = EmployeeInfoSerializer(source='assigned_employees', many=True, read_only=True)
 
     class Meta:
         model = B2COrder
@@ -65,13 +65,10 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'name_client',
                   'price',
                   'description',
-                  'created_at',
                   'status',
                   'report',
-                  'assigned_employee_name',
-                  'assigned_employee_phone',
                   'city',
-                  'country'
+                  'employee_info',
                   ]
 
     def create(self, validated_data):

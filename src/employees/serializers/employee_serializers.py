@@ -29,3 +29,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class EmployeeInfoSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(source='user.phone')
+
+    class Meta:
+        model = Employee
+        fields = ['first_name', 'last_name', 'phone']

@@ -1,14 +1,14 @@
 from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.generics import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import transaction
+import logging
 
 from employees.models import Employee
-from schedules.models import Schedule
-from b2b_client_orders.models import B2BOrder
-from b2c_client_orders.models import B2COrder
 from orders.permissions import CanViewOrder, RoleBasedPermission
+
+logger = logging.getLogger(__name__)
 
 
 class BaseOrderViewSet(viewsets.ModelViewSet):
@@ -50,41 +50,37 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def assign_employee(self, request, pk=None):
         order = self.get_object()
-        employee_ids = request.data.get('employee_ids')
+        employee_ids = request.data.get('employee_ids', [])
 
-        # Если пришел один ID, преобразовываем его в список
-        if isinstance(employee_ids, int):
+        if not employee_ids:
+            return Response({"error": "Требуется список ID сотрудников"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not isinstance(employee_ids, list):
             employee_ids = [employee_ids]
-        elif not employee_ids or not isinstance(employee_ids, list):
-            return Response({"error": "Требуется ID сотрудника или список ID сотрудников"}, status=status.HTTP_400_BAD_REQUEST)
 
-        assigned_employees = []
-        for employee_id in employee_ids:
-            try:
-                employee = Employee.objects.get(id=employee_id)
-            except Employee.DoesNotExist:
-                return Response({"error": f"Сотрудник с ID {employee_id} не найден"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            with transaction.atomic():
+                employees = list(Employee.objects.filter(id__in=employee_ids))
 
-        # Назначение сотрудника на заказ
-        order.assign_employee(employee)
-        assigned_employees.append(employee)
+                if len(employees) != len(employee_ids):
+                    missing_ids = set(employee_ids) - set(e.id for e in employees)
+                    return Response({"error": f"Сотрудники с ID {', '.join(map(str, missing_ids))} не найдены"},
+                                    status=status.HTTP_404_NOT_FOUND)
 
-        # Создание записи в расписании
-        if isinstance(order, B2BOrder):
-            Schedule.objects.create(b2b_order=order, assigned_employee=employee)
-        elif isinstance(order, B2COrder):
-            Schedule.objects.create(b2c_order=order, assigned_employee=employee)
+                order.assign_employees(employees)
+                # order.create_schedule_entries(employees)
 
-        serializer = self.get_serializer(order)
-        return Response({
-            "order": serializer.data,
-            "assigned_employees": [employee.id for employee in assigned_employees]
-        })
+                serializer = self.get_serializer(order)
+                return Response({
+                    "order": serializer.data,
+                    "assigned_employees": [e.id for e in employees]
+                })
 
-    def get_object(self):
-        obj = get_object_or_404(self.queryset, pk=self.kwargs["pk"])
-        self.check_object_permissions(self.request, obj)
-        return obj
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"Ошибка при назначении сотрудников на заказ: {order.id} {str(e)}")
+            return Response({"error": "Произошла ошибка при назначении сотрудников на заказ"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # Завершение заказа сотрудником
     @action(detail=True, methods=['post'])

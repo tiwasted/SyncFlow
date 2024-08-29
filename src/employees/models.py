@@ -15,6 +15,4 @@ class Employee(models.Model):
 
     def delete(self, *args, **kwargs):
 
-        # self.user.delete()
-
         super().delete(*args, **kwargs)

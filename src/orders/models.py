@@ -28,7 +28,7 @@ class AssignableOrder(models.Model):
     )
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in processing')
-    assigned_employee = models.ForeignKey('employees.Employee', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_assigned_orders')
+    assigned_employees = models.ManyToManyField('employees.Employee', related_name='%(class)s_assigned_orders')
     employee_name = models.CharField(max_length=100, blank=True, null=True)
     employee_phone = models.CharField(max_length=11, blank=True, null=True)
     report = models.TextField(blank=True, null=True)
@@ -39,19 +39,36 @@ class AssignableOrder(models.Model):
         abstract = True
 
 
-    def save(self, *args, **kwargs):
-        if self.assigned_employee:
-            self.employee_name = f"{self.assigned_employee.first_name} {self.assigned_employee.last_name}"
-            self.employee_phone = self.assigned_employee.user.phone
+    @property
+    def employee_info(self):
+        employees = self.assign_employees.all()
+        if len (employees) == 1:
+            employee = employees[0]
+            return {
+                "name": f"{employee.first_name} {employee.last_name}",
+                "phone": employee.user.phone
+            }
         else:
-            self.employee_name = None
-            self.employee_phone = None
-        super().save(*args, **kwargs)
+            # Отображение всех сотрудников
+            return [
+                {
+                    "name": f"{employee.first_name} {employee.last_name}",
+                    "phone": employee.user.phone,
+                }
+                for employee in employees
+            ]
 
-    def assign_employee(self, employee):
-        self.assigned_employee.add(employee)
+    def assign_employees(self, employees):
+        if not employees:
+            raise ValueError("Список сотрудников не может быть пустым")
+
+        # Назначение сотрудников на заказ
+        self.assigned_employees.set(employees)
         self.status = 'in waiting'
         self.save()
+
+    def create_schedule_entry(self, employee):
+        raise NotImplementedError("Подклассы должны реализовывать create_schedule_entry()")
 
     def complete_order(self):
         self.status = 'completed'

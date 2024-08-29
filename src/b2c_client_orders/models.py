@@ -1,6 +1,7 @@
 from django.db import models
 from orders.models import AssignableOrder
 from employers.models import Employer, Manager
+from schedules.models import Schedule
 
 
 class B2COrder(AssignableOrder):
@@ -18,10 +19,13 @@ class B2COrder(AssignableOrder):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def get_employer(self):
-        if self.manager:
-            return self.manager.employer
-        return self.employer
+    def create_schedule_entries(self, employees):
+        for employee in employees:
+            Schedule.objects.create(
+                b2c_order=self,
+                assigned_employee=employee,
+
+            )
 
     def __str__(self):
         return self.order_time.strftime('%H:%M') + ' ' + self.order_name
