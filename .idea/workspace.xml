@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/b2c_client_orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/b2c_client_orders/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/serializers/order_serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/serializers/employer_city_serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/serializers/employer_city_serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employers/views/set_city_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employers/views/set_city_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/permissions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/orders/views/base_order.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/base_order.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -114,7 +114,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-abccbe9d933a-ba05f1cad1b1-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.20224.428" />
+        <option value="bundled-python-sdk-98f27166c754-ba05f1cad1b1-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.21829.153" />
       </set>
     </attachedChunks>
   </component>

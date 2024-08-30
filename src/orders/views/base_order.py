@@ -6,44 +6,20 @@ from django.db import transaction
 import logging
 
 from employees.models import Employee
-from orders.permissions import CanViewOrder, RoleBasedPermission
+from orders.permissions import CanViewOrder
+from orders.services import OrderService
 
 logger = logging.getLogger(__name__)
 
 
 class BaseOrderViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, CanViewOrder, RoleBasedPermission]
-
+    permission_classes = [permissions.IsAuthenticated, CanViewOrder]
 
     def perform_create(self, serializer):
-        user = self.request.user
-
-        if hasattr(user, 'manager_profile'):
-            manager = user.manager_profile
-            primary_city_assignment = manager.city_assignments.filter(is_primary=True).first()
-            primary_city = primary_city_assignment.city if primary_city_assignment else None
-            serializer.save(manager=manager, employer=manager.employer, city=primary_city)
-
-        elif hasattr(user, 'employer_profile'):
-            employer = user.employer_profile
-            primary_city_assignment = employer.city_assignments.filter(is_primary=True).first()
-            primary_city = primary_city_assignment.city if primary_city_assignment else None
-            serializer.save(employer=employer, city=primary_city)
-
-        else:
-            raise ValidationError("Невозможно создать заказ: пользователь не является работодателем или менеджером.")
+        OrderService.create_order(self.request.user, serializer)
 
     def perform_update(self, serializer):
-        user = self.request.user
-
-        if hasattr(user, 'manager_profile'):
-            manager = user.manager_profile
-            serializer.save(manager=manager, employer=manager.employer)
-        elif hasattr(user, 'employer_profile'):
-            employer = user.employer_profile
-            serializer.save(employer=employer)
-        else:
-            serializer.save()
+        OrderService.update_order(self.request.user, serializer)
 
 
     # Назначение сотрудников на заказ
@@ -52,24 +28,15 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         order = self.get_object()
         employee_ids = request.data.get('employee_ids', [])
 
-        if not employee_ids:
-            return Response({"error": "Требуется список ID сотрудников"}, status=status.HTTP_400_BAD_REQUEST)
-
         if not isinstance(employee_ids, list):
             employee_ids = [employee_ids]
+
+        if not employee_ids:
+            return Response({"error": "Требуется список ID сотрудников"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             with transaction.atomic():
                 employees = list(Employee.objects.filter(id__in=employee_ids))
-
-                if len(employees) != len(employee_ids):
-                    missing_ids = set(employee_ids) - set(e.id for e in employees)
-                    return Response({"error": f"Сотрудники с ID {', '.join(map(str, missing_ids))} не найдены"},
-                                    status=status.HTTP_404_NOT_FOUND)
-
-                order.assign_employees(employees)
-                # order.create_schedule_entries(employees)
-
                 serializer = self.get_serializer(order)
                 return Response({
                     "order": serializer.data,
@@ -85,45 +52,24 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     # Завершение заказа сотрудником
     @action(detail=True, methods=['post'])
     def complete_order(self, request, pk=None):
-        order = self.get_object()
+        return self._update_order_status(request, pk, 'complete')
 
-        try:
-            employee = request.user.employee_profile
-        except ObjectDoesNotExist:
-            return Response({"error": "Вы не являетесь сотрудником"}, status=status.HTTP_403_FORBIDDEN)
-
-        if order.assigned_employee != employee:
-            return Response({"error": "Вы не назначены на этот заказ"}, status=status.HTTP_403_FORBIDDEN)
-
-        report = request.data.get('report', '')
-        order.complete_order()
-
-        if report:
-            order.report = report
-            order.save()
-
-        serializer = self.get_serializer(order)
-        return Response(serializer.data)
 
     # Отмена заказа сотрудником
     @action(detail=True, methods=['post'])
     def cancel_order(self, request, pk=None):
-        order = self.get_object()
+        return self._update_order_status(request, pk, 'cancel')
 
+    def _update_order_status(self, request, action):
+        order = self.get_object()
         try:
             employee = request.user.employee_profile
         except ObjectDoesNotExist:
             return Response({"error": "Вы не являетесь сотрудником"}, status=status.HTTP_403_FORBIDDEN)
 
-        if order.assigned_employee != employee:
-            return Response({"error": "Вы не назначены на этот заказ"}, status=status.HTTP_403_FORBIDDEN)
-
-        report = request.data.get('report', '')
-        order.cancel_order()
-
-        if report:
-            order.report = report
-            order.save()
-
-        serializer = self.get_serializer(order)
-        return Response(serializer.data)
+        try:
+            updated_order = OrderService.update_order_status(order, employee, action, request.data.get('report', ''))
+            serializer = self.get_serializer(updated_order)
+            return Response(serializer.data)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
