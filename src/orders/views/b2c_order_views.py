@@ -23,7 +23,7 @@ class B2COrderViewSet(BaseOrderViewSet):
             primary_city = EmployerCityAssignment.objects.filter(employer=employer, is_primary=True).values_list('city_id', flat=True)
 
             # Возвращаем заказы только для основного города и со статусом 'in processing'
-            return B2COrder.objects.filter(city__in=primary_city, status='in processing')
+            return B2COrder.objects.filter(city__in=primary_city, status='in_processing')
 
         elif hasattr(user, 'manager_profile'):
             manager = user.manager_profile
@@ -31,6 +31,6 @@ class B2COrderViewSet(BaseOrderViewSet):
             primary_city = ManagerCityAssignment.objects.filter(manager=manager, is_primary=True).values_list('city_id', flat=True)
 
             # Возвращаем заказы только для основного города и со статусом 'in processing'
-            return B2COrder.objects.filter(city__in=primary_city, status='in processing')
+            return B2COrder.objects.filter(city__in=primary_city, status='in_processing')
 
         return B2COrder.objects.none()

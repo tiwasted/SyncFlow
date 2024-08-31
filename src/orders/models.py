@@ -19,29 +19,25 @@ class City(models.Model):
         return f"{self.name}, {self.country.name}"
 
 
-class AssignableOrder(models.Model):
-    STATUS_CHOICES = (
-        ('in processing', 'В обработке'),
-        ('in waiting', 'В ожидании'),
-        ('completed', 'Выполнен'),
-        ('cancelled', 'Отменен'),
-    )
+class AssignableOrderStatus(models.TextChoices):
+    IN_PROCESSING = 'in_processing', 'В обработке'
+    IN_WAITING = 'in_waiting', 'В ожидании'
+    COMPLETED = 'completed', 'Выполнен'
+    CANCELLED = 'cancelled', 'Отменен'
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in processing')
+
+class AssignableOrder(models.Model):
+    status = models.CharField(max_length=20, choices=AssignableOrderStatus.choices, default=AssignableOrderStatus.IN_PROCESSING)
     assigned_employees = models.ManyToManyField('employees.Employee', related_name='%(class)s_assigned_orders')
-    employee_name = models.CharField(max_length=100, blank=True, null=True)
-    employee_phone = models.CharField(max_length=11, blank=True, null=True)
     report = models.TextField(blank=True, null=True)
     city = models.ForeignKey('orders.City', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_orders')
-
 
     class Meta:
         abstract = True
 
-
     @property
-    def employee_info(self):
-        employees = self.assign_employees.all()
+    def assigned_to_info(self):
+        employees = self.assigned_employees.all()
         if len (employees) == 1:
             employee = employees[0]
             return {
@@ -64,16 +60,16 @@ class AssignableOrder(models.Model):
 
         # Назначение сотрудников на заказ
         self.assigned_employees.set(employees)
-        self.status = 'in waiting'
+        self.status = AssignableOrderStatus.IN_WAITING
         self.save()
 
     def create_schedule_entry(self, employee):
         raise NotImplementedError("Подклассы должны реализовывать create_schedule_entry()")
 
     def complete_order(self):
-        self.status = 'completed'
+        self.status = AssignableOrderStatus.COMPLETED
         self.save()
 
     def cancel_order(self):
-        self.status = 'cancelled'
+        self.status = AssignableOrderStatus.CANCELLED
         self.save()
