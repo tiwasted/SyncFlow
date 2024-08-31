@@ -8,14 +8,14 @@ class B2COrder(AssignableOrder):
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='b2c_orders')
     manager = models.ForeignKey(Manager, on_delete=models.SET_NULL, null=True, related_name='b2c_orders')
 
-    order_name = models.CharField(max_length=255)
-    order_date = models.DateField()
-    order_time = models.TimeField()
-    address = models.CharField(max_length=255)
-    phone_number_client = models.CharField(max_length=11)
-    name_client = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=0)
-    description = models.TextField()
+    order_name = models.CharField(max_length=255, null=True)
+    order_date = models.DateField(null=True)
+    order_time = models.TimeField(null=True)
+    address = models.CharField(max_length=255, null=True)
+    phone_number_client = models.CharField(max_length=11, null=True)
+    name_client = models.CharField(max_length=255, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=0, null=True)
+    description = models.TextField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

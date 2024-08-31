@@ -77,3 +77,27 @@ class OrderService:
         return B2COrder.objects.filter(
             Q(order_date=tomorrow) & Q(city=primary_city)
         )
+
+    @staticmethod
+    def get_orders_without_dates(user):
+        primary_city = OrderService.get_primary_city(user)  # Получаем основной город пользователя
+
+        if not primary_city:
+            return B2COrder.objects.none()  # Возвращаем пустой QuerySet, если нет основного города
+
+        # Фильтруем заказы без даты и по основному городу
+        return B2COrder.objects.filter(
+            Q(order_date__isnull=True) & Q(city=primary_city)
+        )
+
+    @staticmethod
+    def get_orders_by_dates(date=None, end_date=None):
+        """
+        Получение заказов по диапазону дат.
+        """
+        queryset = B2COrder.objects.all()
+
+        if date:
+            queryset = queryset.filter(order_date=date)
+
+        return queryset

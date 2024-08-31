@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import transaction
+from datetime import datetime
 import logging
 
 from b2c_client_orders.models import B2COrder
@@ -84,5 +85,28 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def tomorrow_orders(self, request):
         orders = OrderService.get_tomorrow_orders(request.user)
+        serializer = self.get_serializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Получение заказов без дат
+    @action(detail=False, methods=['get'])
+    def orders_without_dates(self, request):
+        orders = OrderService.get_orders_without_dates(request.user)
+        serializer = self.get_serializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Получение заказов по диапазону дат
+    @action(detail=False, methods=['get'])
+    def orders_by_dates(self, request):
+        date_str = request.query_params.get('date')
+
+        # Проверка формата дат
+        try:
+            date = datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+        except ValueError:
+            return Response({"error": "Неправильный формат даты. Используйте формат YYYY-MM-DD."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        orders = OrderService.get_orders_by_dates(date)
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
