@@ -5,6 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import transaction
 import logging
 
+from b2c_client_orders.models import B2COrder
+from orders.serializers.order_serializers import B2COrderSerializer
 from employees.models import Employee
 from orders.permissions import CanViewOrder
 from orders.services import OrderService
@@ -13,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class BaseOrderViewSet(viewsets.ModelViewSet):
+    queryset = B2COrder.objects.all()
+    serializer_class = B2COrderSerializer
     permission_classes = [permissions.IsAuthenticated, CanViewOrder]
 
     def perform_create(self, serializer):
@@ -57,7 +61,6 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     def complete_order(self, request, pk=None):
         return self._update_order_status(request, pk, 'complete')
 
-
     # Отмена заказа сотрудником
     @action(detail=True, methods=['post'])
     def cancel_order(self, request, pk=None):
@@ -76,3 +79,10 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Получение завтрашних заказов по городу
+    @action(detail=False, methods=['get'])
+    def tomorrow_orders(self, request):
+        orders = OrderService.get_tomorrow_orders(request.user)
+        serializer = self.get_serializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

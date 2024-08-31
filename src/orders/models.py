@@ -31,6 +31,7 @@ class AssignableOrder(models.Model):
     assigned_employees = models.ManyToManyField('employees.Employee', related_name='%(class)s_assigned_orders')
     report = models.TextField(blank=True, null=True)
     city = models.ForeignKey('orders.City', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_orders')
+    scheduled_date = models.DateField(null=True, blank=True)
 
     class Meta:
         abstract = True

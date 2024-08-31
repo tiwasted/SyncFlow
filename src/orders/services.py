@@ -1,4 +1,8 @@
 from django.core.exceptions import ValidationError
+from datetime import timedelta, datetime
+from django.db.models import Q
+
+from b2c_client_orders.models import B2COrder
 from employees.models import Employee
 
 
@@ -59,3 +63,17 @@ class OrderService:
             order.save()
 
         return order
+
+    @staticmethod
+    def get_tomorrow_orders(user):
+        today = datetime.today().date()
+        tomorrow = today + timedelta(days=1)
+        primary_city = OrderService.get_primary_city(user)
+
+        if not primary_city:
+            return B2COrder.objects.none()
+
+        # Фильтруем заказы по дате и основному городу
+        return B2COrder.objects.filter(
+            Q(order_date=tomorrow) & Q(city=primary_city)
+        )
