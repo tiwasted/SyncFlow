@@ -1,9 +1,6 @@
 import logging
 from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
-from rest_framework import status, viewsets
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.dateparse import parse_date
 
 from b2c_client_orders.models import B2COrder
@@ -23,7 +20,7 @@ class OrderScheduleService:
             user = CustomUser.objects.get(id=user_id)
             employer = user.employer_profile
 
-            b2c_orders = B2COrder.objects.filter(order_date=date, status='in waiting', employer=employer.id)
+            b2c_orders = B2COrder.objects.filter(order_date=date, status='in_waiting', employer=employer.id)
 
             return b2c_orders
         except CustomUser.DoesNotExist:

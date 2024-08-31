@@ -7,10 +7,21 @@
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/serializers/employee_serializers.py" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/employees/views/employee_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/views/employee_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/orders/views/b2c_order_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/b2c_order_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/orders/views/base_order.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/base_order.py" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/src/employees/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/employees/views/employee_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/employees/views/employee_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/b2c_order_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/views/b2c_order_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/views/schedule_order_views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schedules/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedules/services.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schedules/views/schedule_order_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedules/views/schedule_order_views.py" afterDir="false" />
+>>>>>>> origin/dev
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

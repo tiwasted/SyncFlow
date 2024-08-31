@@ -27,23 +27,17 @@ class AssignableOrderStatus(models.TextChoices):
 
 
 class AssignableOrder(models.Model):
-    status = models.CharField(
-        max_length=20,
-        choices=AssignableOrderStatus.choices,
-        default=AssignableOrderStatus.IN_PROCESSING
-    )
+    status = models.CharField(max_length=20, choices=AssignableOrderStatus.choices, default=AssignableOrderStatus.IN_PROCESSING)
     assigned_employees = models.ManyToManyField('employees.Employee', related_name='%(class)s_assigned_orders')
     report = models.TextField(blank=True, null=True)
     city = models.ForeignKey('orders.City', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_orders')
 
-
     class Meta:
         abstract = True
 
-
     @property
-    def employee_info(self):
-        employees = self.assign_employees.all()
+    def assigned_to_info(self):
+        employees = self.assigned_employees.all()
         if len (employees) == 1:
             employee = employees[0]
             return {
