@@ -2,12 +2,7 @@ from rest_framework import generics, permissions
 
 from employees.models import Employee
 from employees.serializers.employee_serializers import EmployeeSerializer, AssigningEmployeeToOrderSerializer
-<<<<<<< HEAD
 
-=======
-from users.models import CustomUser
-import logging
->>>>>>> origin/dev
 from employees.services import RoleChecker
 
 
@@ -36,11 +31,7 @@ class EmployeeDeleteView(generics.DestroyAPIView):
         instance.delete()
 
 
-<<<<<<< HEAD
 # `Список сотрудников для назначения на заказ`
-=======
-# Список сотрудников для назначения на заказ
->>>>>>> origin/dev
 class AssigningEmployeeToOrderListView(generics.ListAPIView):
     queryset = Employee.objects.all()
     serializer_class = AssigningEmployeeToOrderSerializer
@@ -60,7 +51,3 @@ class AssigningEmployeeToOrderListView(generics.ListAPIView):
             return Employee.objects.filter(employer=employer)
 
         return Employee.objects.none()
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/dev
