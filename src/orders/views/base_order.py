@@ -37,6 +37,9 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         try:
             with transaction.atomic():
                 employees = list(Employee.objects.filter(id__in=employee_ids))
+
+                order.assign_employees(employees)
+
                 serializer = self.get_serializer(order)
                 return Response({
                     "order": serializer.data,
