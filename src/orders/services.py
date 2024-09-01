@@ -4,6 +4,7 @@ from django.db.models import Q
 
 from b2c_client_orders.models import B2COrder
 from employees.models import Employee
+from orders.models import AssignableOrderStatus
 
 
 class OrderService:
@@ -45,7 +46,7 @@ class OrderService:
         return employees
 
     @staticmethod
-    def get_orders_by_date_and_time(date=None):
+    def get_orders_by_date_and_time(date=None, city=None):
         """
         Получение заказов по выбранной дате, отсортированных по времени.
         """
@@ -54,6 +55,9 @@ class OrderService:
 
         if date:
             queryset = queryset.filter(order_date=date)
+
+        if city:
+            queryset = queryset.filter(city=city)
 
         queryset = queryset.order_by('order_time')
 
@@ -121,7 +125,7 @@ class OrderDashboardService:
 
         # Фильтруем заказы по дате и основному городу
         return B2COrder.objects.filter(
-            Q(order_date=tomorrow) & Q(city=primary_city)
+            Q(order_date=tomorrow) & Q(city=primary_city) & Q(status=AssignableOrderStatus.IN_PROCESSING)
         )
 
     @staticmethod
@@ -136,5 +140,5 @@ class OrderDashboardService:
 
         # Фильтруем заказы без даты и по основному городу
         return B2COrder.objects.filter(
-            Q(order_date__isnull=True) & Q(city=primary_city)
+            Q(order_date__isnull=True) & Q(city=primary_city) & Q(status=AssignableOrderStatus.IN_PROCESSING)
         )

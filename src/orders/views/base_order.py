@@ -75,7 +75,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
             return Response({"error": "Вы не являетесь сотрудником"}, status=status.HTTP_403_FORBIDDEN)
 
         try:
-            updated_order = OrderService.update_order_status(order, employee, action, request.data.get('report', ''))
+            updated_order = OrderDashboardService.update_order_status(order, employee, action, request.data.get('report', ''))
             serializer = self.get_serializer(updated_order)
             return Response(serializer.data)
         except ValidationError as e:

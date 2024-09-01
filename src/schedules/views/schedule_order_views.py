@@ -3,10 +3,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from b2c_client_orders.models import B2COrder
-from orders.serializers.order_serializers import B2COrderSerializer
 from employees.serializers.employee_serializers import ListEmployeeByOrderSerializer
 from orders.permissions import CanViewOrder
+from orders.services import OrderService
 from schedules.serializers.schedule_order_serializers import  ScheduleB2COrderSerializer
 from schedules.services import OrderScheduleService
 
@@ -42,11 +41,17 @@ class OrderScheduleViewSet(viewsets.ViewSet):
         Возвращаем список сотрудников, основанный на заказах за выбранную дату.
         """
         date = request.query_params.get('date')
+        user = request.user
 
         if not date:
             raise ValidationError("Дата является обязательной")
 
-        employees = OrderScheduleService.get_employees_by_orders(date)
+        # Получаем профиль и основной город пользователя
+        profile = OrderService.get_user_profile(user)
+        primary_city = OrderService.get_primary_city(user)
 
-        serializer = ListEmployeeByOrderSerializer(employees, many=True)
+        # Фильтруем заказы по дате и основному городу пользователя
+        orders = OrderService.get_orders_by_date_and_time(date=date, city=primary_city)
+
+        serializer = ListEmployeeByOrderSerializer(orders, many=True)
         return Response(serializer.data)

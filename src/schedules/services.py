@@ -56,15 +56,28 @@ class OrderScheduleService:
             raise ValidationError("Произошла неожиданная ошибка")
 
     @staticmethod
-    def get_employees_by_orders(date=None):
+    def get_employees_by_orders(date=None, user=None):
         """
-        Получение списка уникальных сотрудников на основании заказов за выбранную дату.
+        Получение списка сотрудников на основании заказов за выбранную дату.
         """
+
+        # Получаем основной город пользователя
+        primary_city = OrderService.get_primary_city(user)
+
         # Получаем заказы на указанную дату
         orders = OrderService.get_orders_by_date_and_time(date)
 
+        # Если основной город указан, фильтруем заказы по этому городу
+        if primary_city:
+            orders = orders.filter(city=primary_city)
+
         # Извлекаем уникальных сотрудников из заказов
-        employees = Employee.objects.filter(b2corder_assigned_orders__in=orders).distinct()
+        employers = Employer.objects.filter(
+            assignableorder__in=orders
+        ).distinct()
+
+        employees = Employee.objects.filter(
+            employer__in=employers
+        ).distinct()
 
         return employees
-
