@@ -31,6 +31,13 @@ class EmployeeSerializer(serializers.ModelSerializer):
         return instance
 
 
+class AssignedEmployeeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Employee
+        fields = ['id', 'first_name', 'last_name']
+
+
 class EmployeeInfoSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(source='user.phone')
 
@@ -44,3 +51,12 @@ class AssigningEmployeeToOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['id', 'first_name', 'last_name']
+
+
+class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
+    """Serializer для списка сотрудников, основанный на заказах за выбранную дату."""
+    order_time = serializers.TimeField(source='order_time')
+
+    class Meta:
+        model = Employee
+        fields = ['id', 'first_name', 'last_name', 'order_time']

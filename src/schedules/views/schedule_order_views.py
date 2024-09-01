@@ -1,7 +1,11 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
+from b2c_client_orders.models import B2COrder
+from orders.serializers.order_serializers import B2COrderSerializer
+from employees.serializers.employee_serializers import ListEmployeeByOrderSerializer
 from orders.permissions import CanViewOrder
 from schedules.serializers.schedule_order_serializers import  ScheduleB2COrderSerializer
 from schedules.services import OrderScheduleService
@@ -31,3 +35,18 @@ class OrderScheduleViewSet(viewsets.ViewSet):
         else:
             logger.warning("Дата или user_id не указаны")
             return Response({"error": "Дата или user_id не указаны"}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'])
+    def list_employees_by_orders(self, request):
+        """
+        Возвращаем список сотрудников, основанный на заказах за выбранную дату.
+        """
+        date = request.query_params.get('date')
+
+        if not date:
+            raise ValidationError("Дата является обязательной")
+
+        employees = OrderScheduleService.get_employees_by_orders(date)
+
+        serializer = ListEmployeeByOrderSerializer(employees, many=True)
+        return Response(serializer.data)

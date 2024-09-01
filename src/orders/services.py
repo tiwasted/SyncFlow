@@ -7,16 +7,67 @@ from employees.models import Employee
 
 
 class OrderService:
+    """Бизнес-логика для работы с заказами."""
+
+    @staticmethod
+    def get_user_profile(user):
+        """
+        Возвращает профиль пользователя, если у него есть роль employer или manager.
+        """
+        if hasattr(user, 'employer_profile'):
+            return user.employer_profile
+        elif hasattr(user, 'manager_profile'):
+            return user.manager_profile
+        else:
+            return ValidationError("У пользователя нет профиля работодателя или менеджера")
+
     @staticmethod
     def get_primary_city(user):
-        profile = getattr(user, 'manager_profile', None) or getattr(user, 'employer_profile', None)
+        """
+        Получение основного города пользователя.
+        """
+        profile = OrderService.get_user_profile(user)
         if profile:
             primary_city_assignment = profile.city_assignments.filter(is_primary=True).first()
             return primary_city_assignment.city if primary_city_assignment else None
         return None
 
     @staticmethod
+    def assign_employees(order, employee_ids):
+        """
+        Назначение сотрудников на заказ.
+        """
+        employees = list(Employee.objects.filter(id__in=employee_ids))
+        if len (employees) != len(employee_ids):
+            missing_ids = set(employee_ids) - set(e.id for e in employees)
+            raise ValidationError(f"Сотрудники с ID {', '.join(map(str, missing_ids))} не найдены")
+        order.assign_employees(employees)
+        return employees
+
+    @staticmethod
+    def get_orders_by_date_and_time(date=None):
+        """
+        Получение заказов по выбранной дате, отсортированных по времени.
+        """
+
+        queryset = B2COrder.objects.all()
+
+        if date:
+            queryset = queryset.filter(order_date=date)
+
+        queryset = queryset.order_by('order_time')
+
+        return queryset
+
+
+class OrderDashboardService:
+    """Бизнес-логика для работы с заказами во вкладке Dashboard."""
+
+    @staticmethod
     def create_order(user, serializer):
+        """
+        Создание заказа.
+        """
         primary_city = OrderService.get_primary_city(user)
 
         if hasattr(user, 'manager_profile'):
@@ -40,15 +91,6 @@ class OrderService:
             return serializer.save()
 
     @staticmethod
-    def assign_employees(order, employee_ids):
-        employees = list(Employee.objects.filter(id__in=employee_ids))
-        if len (employees) != len(employee_ids):
-            missing_ids = set(employee_ids) - set(e.id for e in employees)
-            raise ValidationError(f"Сотрудники с ID {', '.join(map(str, missing_ids))} не найдены")
-        order.assign_employees(employees)
-        return employees
-
-    @staticmethod
     def update_order_status(order, employee, action, report=''):
         if order.assigned_employee != employee:
             raise ValidationError("Сотрудник не назначен на заказ")
@@ -66,8 +108,12 @@ class OrderService:
 
     @staticmethod
     def get_tomorrow_orders(user):
+        """
+        Получение заказов на завтра.
+        """
         today = datetime.today().date()
-        tomorrow = today + timedelta(days=1)
+        one_day = timedelta(days=1)
+        tomorrow = today + one_day
         primary_city = OrderService.get_primary_city(user)
 
         if not primary_city:
@@ -80,6 +126,9 @@ class OrderService:
 
     @staticmethod
     def get_orders_without_dates(user):
+        """
+        Получение заказов без даты.
+        """
         primary_city = OrderService.get_primary_city(user)  # Получаем основной город пользователя
 
         if not primary_city:
@@ -89,15 +138,3 @@ class OrderService:
         return B2COrder.objects.filter(
             Q(order_date__isnull=True) & Q(city=primary_city)
         )
-
-    @staticmethod
-    def get_orders_by_dates(date=None, end_date=None):
-        """
-        Получение заказов по диапазону дат.
-        """
-        queryset = B2COrder.objects.all()
-
-        if date:
-            queryset = queryset.filter(order_date=date)
-
-        return queryset

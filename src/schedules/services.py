@@ -5,22 +5,43 @@ from django.utils.dateparse import parse_date
 
 from b2c_client_orders.models import B2COrder
 from employers.models import Employer
+from employees.models import Employee
+
+from orders.services import OrderService
 
 logger = logging.getLogger(__name__)
 CustomUser = get_user_model()
 
 class OrderScheduleService:
+    """Бизнес-логика для работы с заказами в расписании."""
+
     @staticmethod
-    def get_orders_for_date_and_user(date, user_id):
+    def get_orders_for_date_and_user(date: int, user_id: int):
+        """
+        Получение заказов на определенную дату для пользователя.
+        """
         try:
+            # Получение даты
             date = parse_date(date)
             if not date:
                 raise ValidationError("Некорректная дата")
 
+            # Получение пользователя и работодателя по ID
             user = CustomUser.objects.get(id=user_id)
-            employer = user.employer_profile
+            profile = OrderService.get_user_profile(user)
 
-            b2c_orders = B2COrder.objects.filter(order_date=date, status='in_waiting', employer=employer.id)
+            # Получение основного города пользователя
+            primary_city = OrderService.get_primary_city(user)
+            if not primary_city:
+                raise ValidationError("Не удалось получить город пользователя")
+
+            # Фильтрация заказов по дате, статусу, работодателю и основному городу
+            b2c_orders = B2COrder.objects.filter(
+                order_date=date,
+                status='in_waiting',
+                employer=profile.id,
+                city=primary_city
+            )
 
             return b2c_orders
         except CustomUser.DoesNotExist:
@@ -33,3 +54,17 @@ class OrderScheduleService:
         except Exception as e:
             logger.error(f"Непредвиденная ошибка: {str(e)}")
             raise ValidationError("Произошла неожиданная ошибка")
+
+    @staticmethod
+    def get_employees_by_orders(date=None):
+        """
+        Получение списка уникальных сотрудников на основании заказов за выбранную дату.
+        """
+        # Получаем заказы на указанную дату
+        orders = OrderService.get_orders_by_date_and_time(date)
+
+        # Извлекаем уникальных сотрудников из заказов
+        employees = Employee.objects.filter(b2corder_assigned_orders__in=orders).distinct()
+
+        return employees
+
