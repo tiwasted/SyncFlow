@@ -55,7 +55,7 @@ class AssigningEmployeeToOrderSerializer(serializers.ModelSerializer):
 
 class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
     """Serializer для списка сотрудников, основанный на заказах за выбранную дату."""
-    order_time = serializers.TimeField(source='order_time')
+    order_time = serializers.CharField(source='b2c_order.order_time')
 
     class Meta:
         model = Employee

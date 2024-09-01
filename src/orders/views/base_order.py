@@ -10,7 +10,7 @@ from b2c_client_orders.models import B2COrder
 from orders.serializers.order_serializers import B2COrderSerializer
 from employees.models import Employee
 from orders.permissions import CanViewOrder
-from orders.services import OrderService
+from orders.services import OrderService, OrderDashboardService
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +21,10 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, CanViewOrder]
 
     def perform_create(self, serializer):
-        OrderService.create_order(self.request.user, serializer)
+        OrderDashboardService.create_order(self.request.user, serializer)
 
     def perform_update(self, serializer):
-        OrderService.update_order(self.request.user, serializer)
+        OrderDashboardService.update_order(self.request.user, serializer)
 
 
     # Назначение сотрудников на заказ
@@ -84,14 +84,14 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     # Получение завтрашних заказов по городу
     @action(detail=False, methods=['get'])
     def tomorrow_orders(self, request):
-        orders = OrderService.get_tomorrow_orders(request.user)
+        orders = OrderDashboardService.get_tomorrow_orders(request.user)
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Получение заказов без дат
     @action(detail=False, methods=['get'])
     def orders_without_dates(self, request):
-        orders = OrderService.get_orders_without_dates(request.user)
+        orders = OrderDashboardService.get_orders_without_dates(request.user)
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -107,6 +107,6 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
             return Response({"error": "Неправильный формат даты. Используйте формат YYYY-MM-DD."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        orders = OrderService.get_orders_by_dates(date)
+        orders = OrderService.get_orders_by_date_and_time(date)
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
