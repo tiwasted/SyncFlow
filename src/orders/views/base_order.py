@@ -7,6 +7,7 @@ from datetime import datetime
 import logging
 
 from b2c_client_orders.models import B2COrder
+from orders.models import AssignableOrderStatus
 from orders.serializers.order_serializers import B2COrderSerializer
 from employees.models import Employee
 from orders.permissions import CanViewOrder
@@ -99,6 +100,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def orders_by_dates(self, request):
         date_str = request.query_params.get('date')
+        user = request.user
 
         # Проверка формата дат
         try:
@@ -107,6 +109,9 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
             return Response({"error": "Неправильный формат даты. Используйте формат YYYY-MM-DD."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        orders = OrderService.get_orders_by_date_and_time(date)
+        primary_city = OrderService.get_primary_city(user)
+
+        orders = OrderService.get_orders_by_date_and_time(date=date, city=primary_city, status=AssignableOrderStatus.IN_PROCESSING)
+
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

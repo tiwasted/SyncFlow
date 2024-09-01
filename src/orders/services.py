@@ -46,7 +46,7 @@ class OrderService:
         return employees
 
     @staticmethod
-    def get_orders_by_date_and_time(date=None, city=None):
+    def get_orders_by_date_and_time(date=None, city=None, status=None):
         """
         Получение заказов по выбранной дате, отсортированных по времени.
         """
@@ -58,6 +58,9 @@ class OrderService:
 
         if city:
             queryset = queryset.filter(city=city)
+
+        if status:
+            queryset = queryset.filter(status=status)
 
         queryset = queryset.order_by('order_time')
 
