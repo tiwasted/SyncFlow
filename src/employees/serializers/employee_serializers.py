@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from b2c_client_orders.models import B2COrder
-from orders.models import AssignableOrder
 from users.models import CustomUser
 from employees.models import Employee
 
@@ -70,3 +69,11 @@ class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
         """
         employees = obj.assigned_employees.all()
         return [f"{employee.first_name} {employee.last_name}" for employee in employees]
+
+
+class SpecificEmployeeOrderSerializer(serializers.ModelSerializer):
+    """Serializer для списка заказов для конкретного сотрудника."""
+
+    class Meta:
+        model = B2COrder
+        fields = ['order_name', 'order_date', 'order_time', 'address', 'price']

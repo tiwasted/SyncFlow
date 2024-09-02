@@ -3,9 +3,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from employees.serializers.employee_serializers import ListEmployeeByOrderSerializer
+from employees.models import Employee
+from employees.serializers.employee_serializers import ListEmployeeByOrderSerializer, SpecificEmployeeOrderSerializer
 from orders.permissions import CanViewOrder
-from orders.services import OrderService
+from orders.serializers.order_serializers import B2COrderSerializer
+from orders.services import OrderService, OrderDashboardService
 from schedules.serializers.schedule_order_serializers import  ScheduleB2COrderSerializer
 from schedules.services import OrderScheduleService
 
@@ -55,3 +57,30 @@ class OrderScheduleViewSet(viewsets.ViewSet):
 
         serializer = ListEmployeeByOrderSerializer(orders, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def list_orders_for_employee(self, request):
+        """
+        Возвращаем список заказов для конкретного сотрудника за выбранную дату.
+        """
+        date = request.query_params.get('date')
+        employee_id = request.query_params.get('employee_id')
+
+        if not date:
+            return Response({"detail": "Дата является обязательной"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not employee_id:
+            return Response({"detail": "ID сотрудника является обязательным"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            employee = Employee.objects.get(id=employee_id)
+        except Employee.DoesNotExist:
+            return Response({"detail": "Сотрудник не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            # Получаем заказы для конкретного сотрудника
+            orders = OrderScheduleService.get_orders_for_employee(employee, date)
+            serializer = SpecificEmployeeOrderSerializer(orders, many=True)
+            return Response(serializer.data)
+        except ValidationError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -4,6 +4,7 @@ from django.db.models import Q
 
 from b2c_client_orders.models import B2COrder
 from employees.models import Employee
+from employers.models import Employer, EmployerCityAssignment, Manager, ManagerCityAssignment
 from orders.models import AssignableOrderStatus
 
 
@@ -19,8 +20,11 @@ class OrderService:
             return user.employer_profile
         elif hasattr(user, 'manager_profile'):
             return user.manager_profile
+        elif hasattr(user, 'employee_profile'):
+            return user.employee_profile
         else:
-            return ValidationError("У пользователя нет профиля работодателя или менеджера")
+            raise ValidationError(
+                f"Профиль пользователя (ID: {user.id}) не является работодателем, менеджером или сотрудником")
 
     @staticmethod
     def get_primary_city(user):
@@ -28,10 +32,32 @@ class OrderService:
         Получение основного города пользователя.
         """
         profile = OrderService.get_user_profile(user)
-        if profile:
-            primary_city_assignment = profile.city_assignments.filter(is_primary=True).first()
-            return primary_city_assignment.city if primary_city_assignment else None
-        return None
+
+        if isinstance(profile, Employer):
+            primary_city_assignment = EmployerCityAssignment.objects.filter(
+                employer=profile,
+                is_primary=True
+            ).first()
+        elif isinstance(profile, Manager):
+            primary_city_assignment = ManagerCityAssignment.objects.filter(
+                manager=profile,
+                is_primary=True
+            ).first()
+        elif isinstance(profile, Employee):
+            employer = profile.employer
+            if not employer:
+                raise ValidationError("Сотрудник не связан с работодателем")
+            primary_city_assignment = EmployerCityAssignment.objects.filter(
+                employer=employer,
+                is_primary=True
+            ).first()
+        else:
+            raise ValidationError("Профиль пользователя не является работодателем, менеджером или сотрудником")
+
+        if not primary_city_assignment:
+            raise ValidationError(f"Основной город не найден для профиля {profile}")
+
+        return primary_city_assignment.city if primary_city_assignment else None
 
     @staticmethod
     def assign_employees(order, employee_ids):

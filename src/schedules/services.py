@@ -81,3 +81,25 @@ class OrderScheduleService:
         ).distinct()
 
         return employees
+
+    @staticmethod
+    def get_orders_for_employee(employee=None, date=None):
+        """
+        Получаем заказы для конкретного сотрудника за выбранную дату.
+        """
+        if not date:
+            raise ValidationError("Дата является обязательной")
+
+        # Получаем основной город через профиль пользователя
+        primary_city = OrderService.get_primary_city(employee.user)
+
+        if not primary_city:
+            raise ValidationError("Основной город не найден")
+
+        # Фильтруем заказы по дате, основному городу и сотруднику
+        orders = B2COrder.objects.filter(
+            assigned_employees=employee,
+            order_date=date,
+            city=primary_city
+        )
+        return orders
