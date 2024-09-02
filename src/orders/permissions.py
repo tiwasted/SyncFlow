@@ -10,3 +10,11 @@ class CanViewOrder(permissions.BasePermission):
         if hasattr(request.user, 'employee_profile'):
             return obj.assigned_employee == request.user.employee_profile
         return False
+
+
+class IsEmployerOrManager(permissions.BasePermission):
+    """
+    Разрешение, предоставляющее доступ только пользователям с профилями employer или manager.
+    """
+    def has_permission(self, request, view):
+        return hasattr(request.user, 'employer_profile') or hasattr(request.user, 'manager_profile')

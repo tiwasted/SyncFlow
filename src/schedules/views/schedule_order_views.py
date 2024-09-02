@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from b2c_client_orders.models import B2COrder
 from employees.models import Employee
 from employees.serializers.employee_serializers import ListEmployeeByOrderSerializer, SpecificEmployeeOrderSerializer
-from orders.permissions import CanViewOrder
+from orders.permissions import CanViewOrder, IsEmployerOrManager
 from orders.serializers.order_serializers import B2COrderSerializer
 from orders.services import OrderService, OrderDashboardService
 from schedules.serializers.schedule_order_serializers import  ScheduleB2COrderSerializer
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class OrderScheduleViewSet(viewsets.ModelViewSet):
     queryset = B2COrder.objects.all()
     serializer_class = B2COrderSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewOrder]
+    permission_classes = [permissions.IsAuthenticated, CanViewOrder, IsEmployerOrManager]
 
     @action(detail=False, methods=['get'])
     def list_employees_by_orders(self, request):

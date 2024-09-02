@@ -1,8 +1,10 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from employers.models import ManagerCityAssignment
+from orders.permissions import IsEmployerOrManager
 from users.models import CustomUser
 from orders.models import City
 from employers.serializers.role_serializers import RoleCreateSerializer
@@ -18,6 +20,8 @@ class RoleListView(APIView):
 
 
 class RoleCreateView(APIView):
+    permission_classes = [IsAuthenticated, IsEmployerOrManager]
+
     serializer_class = RoleCreateSerializer
 
     def post(self, request):

@@ -4,11 +4,14 @@ from rest_framework.response import Response
 
 from employers.models import EmployerCityAssignment, ManagerCityAssignment
 from employers.serializers.employer_city_serializer import SetPrimaryCitySerializer
+from orders.permissions import IsEmployerOrManager
+
+from orders.services import OrderService
 
 
 # API для выбора основного города
 class SetPrimaryCityView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
     serializer_class = SetPrimaryCitySerializer
 
     def post(self, request, *args, **kwargs):
@@ -46,15 +49,17 @@ class GetPrimaryCityView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        employer = request.user.employer_profile
-        primary_city = employer.city_assignments.filter(is_primary=True).first()
+        profile = OrderService.get_user_profile(request.user)
 
-        if primary_city:
-            data = {
-                "city_id": primary_city.city.id,
-                "city_name": primary_city.city.name,
-                "country": primary_city.city.country.name
-            }
-            return Response(data, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "Основной город не назначен."}, status=status.HTTP_404_NOT_FOUND)
+        if hasattr(profile, 'city_assignments'):
+            primary_city = profile.city_assignments.filter(is_primary=True).first()
+
+            if primary_city:
+                data = {
+                    "city_id": primary_city.city.id,
+                    "city_name": primary_city.city.name,
+                    "country": primary_city.city.country.name
+                }
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Основной город не назначен."}, status=status.HTTP_404_NOT_FOUND)

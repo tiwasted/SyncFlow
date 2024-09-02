@@ -61,7 +61,18 @@ class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = B2COrder
-        fields = ['id', 'order_name','order_time','employees']
+        fields = ['id',
+                  'order_name',
+                  'order_date',
+                  'order_time',
+                  'address',
+                  'phone_number_client',
+                  'name_client',
+                  'price',
+                  'description',
+                  'status',
+                  'employees'
+                  ]
 
     def get_employees(self, obj):
         """
@@ -75,4 +86,14 @@ class SpecificEmployeeOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = B2COrder
-        fields = ['id','order_name', 'order_date', 'order_time', 'address', 'price']
+        fields = ['id',
+                  'order_name',
+                  'order_date',
+                  'order_time',
+                  'address',
+                  'phone_number_client',
+                  'name_client',
+                  'price',
+                  'description',
+                  'status'
+                  ]
