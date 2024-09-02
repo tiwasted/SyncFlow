@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from b2c_client_orders.models import B2COrder
 from employees.models import Employee
 from employees.serializers.employee_serializers import ListEmployeeByOrderSerializer, SpecificEmployeeOrderSerializer
 from orders.permissions import CanViewOrder
@@ -15,7 +16,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class OrderScheduleViewSet(viewsets.ViewSet):
+class OrderScheduleViewSet(viewsets.ModelViewSet):
+    queryset = B2COrder.objects.all()
+    serializer_class = B2COrderSerializer
     permission_classes = [permissions.IsAuthenticated, CanViewOrder]
 
     @action(detail=False, methods=['get'])
