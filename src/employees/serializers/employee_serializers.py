@@ -57,7 +57,7 @@ class AssigningEmployeeToOrderSerializer(serializers.ModelSerializer):
 
 class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
     """Serializer для списка сотрудников, основанный на заказах за выбранную дату."""
-    employees = serializers.SerializerMethodField()
+    employees = AssignedEmployeeSerializer(source='assigned_employees', many=True, read_only=True)
 
     class Meta:
         model = B2COrder
@@ -67,8 +67,7 @@ class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
         """
         Получение списка сотрудников для данного заказа.
         """
-        employees = obj.assigned_employees.all()
-        return [f"{employee.first_name} {employee.last_name}" for employee in employees]
+        return obj.assigned_employees.all()
 
 
 class SpecificEmployeeOrderSerializer(serializers.ModelSerializer):
