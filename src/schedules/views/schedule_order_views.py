@@ -32,15 +32,28 @@ class OrderScheduleViewSet(viewsets.ModelViewSet):
         if not date:
             raise ValidationError("Дата является обязательной")
 
-        # Получаем профиль и основной город пользователя
-        profile = OrderService.get_user_profile(user)
-        primary_city = OrderService.get_primary_city(user)
+        if not date:
+            raise ValidationError("Дата является обязательной")
 
-        # Фильтруем заказы по дате и основному городу пользователя
-        orders = OrderService.get_orders_by_date_and_time(date=date, city=primary_city)
+        try:
+            orders = OrderScheduleService.get_orders_for_date_and_user(date=date, user_id=user.id)
+            serializer = ListEmployeeByOrderSerializer(orders, many=True)
+            return Response(serializer.data)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"Непредвиденная ошибка: {str(e)}")
+            return Response({"error": "Произошла неожиданная ошибка"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        serializer = ListEmployeeByOrderSerializer(orders, many=True)
-        return Response(serializer.data)
+        # # Получаем профиль и основной город пользователя
+        # profile = OrderService.get_user_profile(user)
+        # primary_city = OrderService.get_primary_city(user)
+        #
+        # # Фильтруем заказы по дате и основному городу пользователя
+        # orders = OrderService.get_orders_by_date_and_time(date=date, city=primary_city)
+        #
+        # serializer = ListEmployeeByOrderSerializer(orders, many=True)
+        # return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def list_orders_for_employee(self, request):

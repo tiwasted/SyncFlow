@@ -6,6 +6,7 @@ from django.utils.dateparse import parse_date
 from b2c_client_orders.models import B2COrder
 from employers.models import Employer
 from employees.models import Employee
+from orders.models import AssignableOrderStatus
 
 from orders.services import OrderService
 
@@ -32,18 +33,21 @@ class OrderScheduleService:
 
             # Получение основного города пользователя
             primary_city = OrderService.get_primary_city(user)
+
             if not primary_city:
                 raise ValidationError("Не удалось получить город пользователя")
 
             # Фильтрация заказов по дате, статусу, работодателю и основному городу
-            b2c_orders = B2COrder.objects.filter(
-                order_date=date,
-                status='in_waiting',
-                employer=profile.id,
-                city=primary_city
+            orders = OrderService.get_orders_by_date_and_time(
+                date=date,
+                city=primary_city,
+                status=AssignableOrderStatus.IN_WAITING
             )
 
-            return b2c_orders
+            orders = orders.filter(employer=profile.id)
+
+            return orders
+
         except CustomUser.DoesNotExist:
             raise ValidationError("Пользователь не найден")
         except Employer.DoesNotExist:
