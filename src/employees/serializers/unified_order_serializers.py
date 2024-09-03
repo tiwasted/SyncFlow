@@ -17,7 +17,6 @@ class UnifiedOrderSerializer(serializers.Serializer):
     description = serializers.CharField()
     status = serializers.CharField()
     assigned_employee_id = serializers.IntegerField(required=False)
-    created_at = serializers.DateTimeField()
 
     def get_order_type(self, instance):
         if isinstance(instance, B2BOrder):

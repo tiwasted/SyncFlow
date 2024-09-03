@@ -1,4 +1,7 @@
 from django.db import models
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Country(models.Model):
@@ -69,8 +72,10 @@ class AssignableOrder(models.Model):
 
     def complete_order(self):
         self.status = AssignableOrderStatus.COMPLETED
+        logger.debug("Сохранение статуса COMPLETED для заказа %s", self.id)
         self.save()
 
     def cancel_order(self):
         self.status = AssignableOrderStatus.CANCELLED
+        logger.debug("Сохранение статуса CANCELLED для заказа %s", self.id)
         self.save()

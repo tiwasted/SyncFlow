@@ -68,7 +68,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
     def cancel_order(self, request, pk=None):
         return self._update_order_status(request, pk, 'cancel')
 
-    def _update_order_status(self, request, action):
+    def _update_order_status(self, request, pk, action):
         order = self.get_object()
         try:
             employee = request.user.employee_profile

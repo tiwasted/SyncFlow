@@ -69,6 +69,8 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'report',
                   'city',
                   'employee_info',
+                  # 'assigned_employees'
+                  # 'assigned_employee_id'
                   ]
 
     def create(self, validated_data):
