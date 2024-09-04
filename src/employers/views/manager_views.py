@@ -6,7 +6,6 @@ from employers.permissions import IsEmployer
 from orders.permissions import IsEmployerOrManager
 from users.models import CustomUser
 from employers.models import Manager
-from employees.models import Employee
 from orders.services import OrderService
 
 from employers.serializers.manager_serializers import ManagerSerializer, ManagerSerializerUpdate
@@ -21,16 +20,17 @@ class ManagerListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         user = self.request.user
         profile = OrderService.get_user_profile(user)
 
         if hasattr(profile, 'employer_profile'):
-            return Employee.objects.filter(employer=profile.employer)
+            return Manager.objects.filter(employer=profile.employer)
 
         elif hasattr(profile, 'manager_profile'):
-            return Employee.objects.filter(manager=profile.manager)
+            return Manager.objects.filter(manager=profile.manager)
 
-        return Employee.objects.none()
+        return queryset
 
 
 class ManagerDetailView(generics.RetrieveAPIView):

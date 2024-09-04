@@ -14,7 +14,8 @@ class EmployeeListView(generics.ListAPIView):
     serializer_class = EmployeeSerializer
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
-    def get_view_name(self):
+    def get_queryset(self):
+        queryset = super().get_queryset()
         user = self.request.user
         profile = OrderService.get_user_profile(user)
 
@@ -24,7 +25,7 @@ class EmployeeListView(generics.ListAPIView):
         elif hasattr(profile, 'manager_profile'):
             return Employee.objects.filter(manager=profile.manager)
 
-        return Employee.objects.none()
+        return queryset
 
 
 # Удаление сотрудников через Работодателя
