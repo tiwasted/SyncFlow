@@ -45,15 +45,6 @@ class OrderScheduleViewSet(viewsets.ModelViewSet):
             logger.error(f"Непредвиденная ошибка: {str(e)}")
             return Response({"error": "Произошла неожиданная ошибка"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # # Получаем профиль и основной город пользователя
-        # profile = OrderService.get_user_profile(user)
-        # primary_city = OrderService.get_primary_city(user)
-        #
-        # # Фильтруем заказы по дате и основному городу пользователя
-        # orders = OrderService.get_orders_by_date_and_time(date=date, city=primary_city)
-        #
-        # serializer = ListEmployeeByOrderSerializer(orders, many=True)
-        # return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def list_orders_for_employee(self, request):

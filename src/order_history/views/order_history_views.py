@@ -2,10 +2,11 @@ from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 
-from users.models import CustomUser
+from orders.permissions import IsEmployerOrManager
 from b2c_client_orders.models import B2COrder
 from orders.serializers.order_serializers import B2COrderSerializer
 from order_history.filters import B2COrderFilter
+from order_history.services import OrderFilterService
 
 
 class B2COrderHistoryPagination(PageNumberPagination):
@@ -14,17 +15,15 @@ class B2COrderHistoryPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class B2COrderHistoryViewSet(viewsets.ModelViewSet):
+class B2COrderHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = B2COrder.objects.all()
     serializer_class = B2COrderSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = B2COrderFilter
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
     pagination_class = B2COrderHistoryPagination
 
+    http_method_names = ['get', 'head', 'options']
+
     def get_queryset(self):
-        user = self.request.user
-        if user.role == CustomUser.EMPLOYER:
-            employer = user.employer_profile
-            return B2COrder.objects.filter(status__in=['completed', 'cancelled'], employer=employer)
-        return B2COrder.objects.none()
+        return OrderFilterService.filter_orders_by_status()

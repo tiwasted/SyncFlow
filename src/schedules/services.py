@@ -13,6 +13,7 @@ from orders.services import OrderService
 logger = logging.getLogger(__name__)
 CustomUser = get_user_model()
 
+
 class OrderScheduleService:
     """Бизнес-логика для работы с заказами в расписании."""
 
@@ -104,6 +105,8 @@ class OrderScheduleService:
         orders = B2COrder.objects.filter(
             assigned_employees=employee,
             order_date=date,
-            city=primary_city
+            city=primary_city,
+            status = AssignableOrderStatus.IN_WAITING
         )
-        return orders
+        order_time = orders.order_by('order_time')
+        return order_time
