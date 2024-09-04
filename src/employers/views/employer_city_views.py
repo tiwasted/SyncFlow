@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework import status, permissions, generics
 from rest_framework.response import Response
 
+from employers.permissions import IsEmployer
 from users.models import CustomUser
 from employers.models import EmployerCityAssignment, Employer, Manager
 from orders.models import Country, City
@@ -10,7 +11,7 @@ from orders.serializers.city_order_serializers import CitySerializer
 
 # Добавление стран Employer
 class AddCountriesView(generics.UpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployer]
 
     def post(self, request, *args, **kwargs):
         employer = request.user.employer_profile
@@ -22,7 +23,7 @@ class AddCountriesView(generics.UpdateAPIView):
 
 # Добавление городов Employer
 class AddCitiesView(generics.UpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployer]
 
     def post(self, request, *args, **kwargs):
         employer = request.user.employer_profile

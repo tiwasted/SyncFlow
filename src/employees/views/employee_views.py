@@ -8,8 +8,10 @@ from orders.permissions import IsEmployerOrManager
 from orders.services import OrderService
 
 
-# Чтение сотрудников для Работодателя
 class EmployeeListView(generics.ListAPIView):
+    """
+    Список сотрудников для Работодателя и Менеджера
+    """
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
@@ -20,12 +22,12 @@ class EmployeeListView(generics.ListAPIView):
         profile = OrderService.get_user_profile(user)
 
         if hasattr(profile, 'employer_profile'):
-            return Employee.objects.filter(employer=profile.employer)
+            return Employee.objects.filter(employer=profile.employer, is_active=True)
 
         elif hasattr(profile, 'manager_profile'):
-            return Employee.objects.filter(manager=profile.manager)
+            return Employee.objects.filter(manager=profile.manager, is_active=True)
 
-        return queryset
+        return queryset.filter(is_active=True)
 
 
 # Удаление сотрудников через Работодателя
@@ -36,6 +38,7 @@ class EmployeeDeleteView(generics.DestroyAPIView):
     lookup_field = 'pk'
 
     def perform_destroy(self, instance):
+        # Деактивация сотрудника вместо его удаления
         instance.delete()
 
 

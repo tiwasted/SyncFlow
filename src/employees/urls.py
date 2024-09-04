@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.employee_views import EmployeeListView, EmployeeDeleteView, AssigningEmployeeToOrderListView
-from .views.create_employee_views import EmployeeCreateView
+# from .views.create_employee_views import EmployeeCreateView
 from .views.assigned_order_views import AssignedOrderEmployeeListView
 from .views.edit_employee_views import EmployeeUpdateView
 from b2c_client_orders.views.load_image_views import AddOrderImageView, DeleteOrderImageView
@@ -8,7 +8,7 @@ from b2c_client_orders.views.load_image_views import AddOrderImageView, DeleteOr
 
 urlpatterns = [
     path('employees/', EmployeeListView.as_view(), name='employee-list'),
-    path('create-employee/', EmployeeCreateView.as_view(), name='employee-create'),
+    # path('create-employee/', EmployeeCreateView.as_view(), name='employee-create'),
     path('edit/<int:pk>/', EmployeeUpdateView.as_view(), name='employee-edit'),
     path('<int:pk>/delete/', EmployeeDeleteView.as_view(), name='employee-delete'),
 
