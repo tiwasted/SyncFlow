@@ -2,8 +2,12 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 
+from employers.permissions import IsEmployer
+from orders.permissions import IsEmployerOrManager
 from users.models import CustomUser
 from employers.models import Manager
+from employees.models import Employee
+from orders.services import OrderService
 
 from employers.serializers.manager_serializers import ManagerSerializer, ManagerSerializerUpdate
 
@@ -14,20 +18,25 @@ User = get_user_model()
 class ManagerListView(generics.ListAPIView):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
     def get_queryset(self):
         user = self.request.user
-        if hasattr(user, 'employer_profile'):
-            employer = user.employer_profile
-            return Manager.objects.filter(employer=employer)
-        return Manager.objects.none()
+        profile = OrderService.get_user_profile(user)
+
+        if hasattr(profile, 'employer_profile'):
+            return Employee.objects.filter(employer=profile.employer)
+
+        elif hasattr(profile, 'manager_profile'):
+            return Employee.objects.filter(manager=profile.manager)
+
+        return Employee.objects.none()
 
 
 class ManagerDetailView(generics.RetrieveAPIView):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployer]
     lookup_field = 'pk'
 
 
@@ -35,7 +44,7 @@ class ManagerDetailView(generics.RetrieveAPIView):
 class ManagerUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializerUpdate
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployer]
 
     def get_queryset(self):
         user = self.request.user
@@ -48,7 +57,7 @@ class ManagerUpdateView(generics.RetrieveUpdateAPIView):
 class ManagerDeleteView(generics.DestroyAPIView):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsEmployer]
     lookup_field = 'pk'
 
     def perform_destroy(self, instance):

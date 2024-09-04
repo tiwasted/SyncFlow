@@ -72,7 +72,7 @@ class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
                   'description',
                   'status',
                   'employees'
-                  ]
+                 ]
 
     def get_employees(self, obj):
         """
@@ -96,4 +96,4 @@ class SpecificEmployeeOrderSerializer(serializers.ModelSerializer):
                   'price',
                   'description',
                   'status'
-                  ]
+                 ]
