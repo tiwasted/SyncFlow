@@ -3,7 +3,7 @@ from rest_framework import generics, permissions
 from employees.models import Employee
 from employees.serializers.employee_serializers import EmployeeSerializer, AssigningEmployeeToOrderSerializer
 
-from employees.services import RoleChecker
+from orders.permissions import IsEmployerOrManager
 
 
 # Чтение сотрудников для Работодателя
@@ -31,23 +31,10 @@ class EmployeeDeleteView(generics.DestroyAPIView):
         instance.delete()
 
 
-# `Список сотрудников для назначения на заказ`
 class AssigningEmployeeToOrderListView(generics.ListAPIView):
+    """
+    Список сотрудников для назначения на заказ для Работодателя и Менеджера (только в назначенных городах)
+    """
     queryset = Employee.objects.all()
     serializer_class = AssigningEmployeeToOrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        role_checker = RoleChecker()
-        user_role = role_checker.get_user_role(user)
-
-        if user_role == 'employer':
-            employer = user.employer_profile
-            return Employee.objects.filter(employer=employer)
-        elif user_role == 'manager':
-            manager = user.manager_profile
-            employer = manager.employer
-            return Employee.objects.filter(employer=employer)
-
-        return Employee.objects.none()
+    permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]

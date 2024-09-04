@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.decorators import action
+import logging
 
 from b2c_client_orders.models import B2COrder
 from employees.models import Employee
@@ -12,9 +13,9 @@ from orders.services import OrderService, OrderDashboardService
 from schedules.serializers.schedule_order_serializers import  ScheduleB2COrderSerializer
 from schedules.services import OrderScheduleService
 
-import logging
 
 logger = logging.getLogger(__name__)
+
 
 class OrderScheduleViewSet(viewsets.ModelViewSet):
     queryset = B2COrder.objects.all()
@@ -30,10 +31,7 @@ class OrderScheduleViewSet(viewsets.ModelViewSet):
         user = request.user
 
         if not date:
-            raise ValidationError("Дата является обязательной")
-
-        if not date:
-            raise ValidationError("Дата является обязательной")
+            return Response({"error": "Дата является обязательной"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             orders = OrderScheduleService.get_orders_for_date_and_user(date=date, user_id=user.id)

@@ -13,7 +13,6 @@ urlpatterns = [
     path('<int:pk>/delete/', EmployeeDeleteView.as_view(), name='employee-delete'),
 
     path('assigned-orders/', AssignedOrderEmployeeListView.as_view(), name='assigned-orders-list'),
-    path('assigning-list/', AssigningEmployeeToOrderListView.as_view(), name='list-for-assigning'),
 
     path('assigning-list/', AssigningEmployeeToOrderListView.as_view(), name='assigning-employee-list'),
 
