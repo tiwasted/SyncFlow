@@ -5,32 +5,34 @@ from django.contrib.auth import get_user_model
 from employers.permissions import IsEmployer
 from orders.permissions import IsEmployerOrManager
 from users.models import CustomUser
+from employers.models import Employer
 from employers.models import Manager
 from orders.services import OrderService
 
 from employers.serializers.manager_serializers import ManagerSerializer, ManagerSerializerUpdate
 
+
 User = get_user_model()
 
 
-# Чтение менеджеров для Работодателя
 class ManagerListView(generics.ListAPIView):
+    """
+    Список менеджеров для Работодателя и других Менеджеров этого работодателя.
+    """
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         user = self.request.user
         profile = OrderService.get_user_profile(user)
 
-        if hasattr(profile, 'employer_profile'):
+        if isinstance(profile, Employer):
+            return Manager.objects.filter(employer=profile)
+        elif isinstance(profile, Manager):
             return Manager.objects.filter(employer=profile.employer)
 
-        elif hasattr(profile, 'manager_profile'):
-            return Manager.objects.filter(manager=profile.manager)
-
-        return queryset
+        return Manager.objects.none()
 
 
 class ManagerDetailView(generics.RetrieveAPIView):

@@ -1,5 +1,7 @@
 from rest_framework import generics, permissions
 
+from employers.models import Employer
+from employers.models import Manager
 from employees.models import Employee
 from employees.serializers.employee_serializers import EmployeeSerializer, AssigningEmployeeToOrderSerializer
 from employers.permissions import IsEmployer
@@ -17,17 +19,17 @@ class EmployeeListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        # queryset = super().get_queryset()
         user = self.request.user
         profile = OrderService.get_user_profile(user)
 
-        if hasattr(profile, 'employer_profile'):
+        if isinstance(profile, Employer):
+            return Employee.objects.filter(employer=profile, is_active=True)
+
+        elif isinstance(profile, Manager):
             return Employee.objects.filter(employer=profile.employer, is_active=True)
 
-        elif hasattr(profile, 'manager_profile'):
-            return Employee.objects.filter(manager=profile.manager, is_active=True)
-
-        return queryset.filter(is_active=True)
+        return Employee.objects.none()
 
 
 # Удаление сотрудников через Работодателя
