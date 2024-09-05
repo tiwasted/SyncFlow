@@ -51,3 +51,14 @@ class AssigningEmployeeToOrderListView(generics.ListAPIView):
     queryset = Employee.objects.all()
     serializer_class = AssigningEmployeeToOrderSerializer
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
+
+    def get_queryset(self):
+        user = self.request.user
+        profile = OrderService.get_user_profile(user)
+
+        if isinstance(profile, Employer):
+            return Employee.objects.filter(employer=profile, is_active=True)
+        elif isinstance(profile, Manager):
+            return Employee.objects.filter(employer=profile.employer, is_active=True)
+
+        return Employee.objects.none()
