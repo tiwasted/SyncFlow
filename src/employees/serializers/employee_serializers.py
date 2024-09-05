@@ -71,7 +71,8 @@ class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
                   'price',
                   'description',
                   'status',
-                  'employees'
+                  'employees',
+                  'city'
                  ]
 
     def get_employees(self, obj):
@@ -95,5 +96,6 @@ class SpecificEmployeeOrderSerializer(serializers.ModelSerializer):
                   'name_client',
                   'price',
                   'description',
-                  'status'
+                  'status',
+                  'city'
                  ]

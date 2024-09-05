@@ -48,7 +48,8 @@ class OrderScheduleService:
             if user.role == CustomUser.EMPLOYER:
                 orders = orders.filter(employer=profile)
             elif user.role == CustomUser.MANAGER:
-                orders = orders.filter(manager=profile)
+                employer = profile.employer
+                orders = orders.filter(employer=employer)
             else:
                 raise ValidationError("Пользователь не является работодателем или менеджером")
 

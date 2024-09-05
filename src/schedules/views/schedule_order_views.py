@@ -9,8 +9,6 @@ from employees.models import Employee
 from employees.serializers.employee_serializers import ListEmployeeByOrderSerializer, SpecificEmployeeOrderSerializer
 from orders.permissions import CanViewOrder, IsEmployerOrManager
 from orders.serializers.order_serializers import B2COrderSerializer
-from orders.services import OrderService, OrderDashboardService
-from schedules.serializers.schedule_order_serializers import  ScheduleB2COrderSerializer
 from schedules.services import OrderScheduleService
 
 
