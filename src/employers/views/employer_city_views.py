@@ -3,6 +3,7 @@ from rest_framework import status, permissions, generics
 from rest_framework.response import Response
 
 from employers.permissions import IsEmployer
+from orders.permissions import IsEmployerOrManager
 from users.models import CustomUser
 from employers.models import EmployerCityAssignment, Employer, Manager
 from orders.models import Country, City
@@ -46,10 +47,19 @@ class AddCitiesView(generics.UpdateAPIView):
 
 # Отображение городов Employer
 class AvailableCitiesView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
     def get(self, request, *args, **kwargs):
-        employer = request.user.employer_profile
-        cities = employer.selected_cities.all()
+        user = request.user
+        cities = []
+
+        if user.role == CustomUser.EMPLOYER:
+            employer = user.employer_profile
+            cities = employer.selected_cities.all()
+        elif user.role == CustomUser.MANAGER:
+            employer = user.manager_profile
+            cities = employer.cities.all()
+
         city_data = [{'id': city.id, 'name': city.name} for city in cities]
 
         return Response({

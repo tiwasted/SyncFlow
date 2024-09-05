@@ -34,14 +34,14 @@ class RoleCreateView(APIView):
             city_ids = request.data.get('city_ids', [])
             if city_ids:
                 cities = City.objects.filter(id__in=city_ids)
-
                 selected_countries = user.employer_profile.selected_countries.all()
+
                 if not cities.filter(country__in=selected_countries).exists():
                     return Response({"status": "Некоторые города не относятся к выбранным странам"},
                                     status=status.HTTP_400_BAD_REQUEST)
 
                 for city in cities:
-                    ManagerCityAssignment.manager_city_assignment.get_or_create(manager=user.manager_profile, city=city)
+                    ManagerCityAssignment.objects.get_or_create(manager=user.manager_profile, city=city)
 
             return Response({
                 "message": "Пользователь успешно создан",
