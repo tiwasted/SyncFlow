@@ -40,6 +40,10 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
         if not employee_ids:
             return Response({"error": "Требуется список ID сотрудников"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Валидация, что у заказа есть дата
+        if not order.order_date:
+            return Response({"error": "Невозможно назначить сотрудников на заказ без даты"}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             with transaction.atomic():
                 employees = list(Employee.objects.filter(id__in=employee_ids))
