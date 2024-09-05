@@ -1,10 +1,18 @@
 import django_filters
 from b2c_client_orders.models import B2COrder
 from orders.models import City
+from orders.models import AssignableOrderStatus
 
 
 class B2COrderFilter(django_filters.FilterSet):
-    status = django_filters.CharFilter(field_name='status', lookup_expr='exact')
+    status = django_filters.ChoiceFilter(
+        field_name='status',
+        choices=[
+            (AssignableOrderStatus.COMPLETED, 'Completed'),
+            (AssignableOrderStatus.CANCELLED, 'Cancelled')
+        ],
+        lookup_expr='exact'
+    )
     order_date = django_filters.DateFilter(field_name='order_date', lookup_expr='exact')
     phone_number_client = django_filters.CharFilter(field_name='phone_number_client', lookup_expr='icontains')
     phone_number_employee = django_filters.CharFilter(field_name='assigned_employees__user__phone', lookup_expr='icontains')

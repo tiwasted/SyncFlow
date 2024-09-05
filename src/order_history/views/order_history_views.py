@@ -4,9 +4,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from orders.permissions import IsEmployerOrManager
 from b2c_client_orders.models import B2COrder
+from employers.models import Employer, Manager
+from orders.models import AssignableOrderStatus
 from orders.serializers.order_serializers import B2COrderSerializer
 from order_history.filters import B2COrderFilter
-from order_history.services import OrderFilterService
+from orders.services import OrderService
 
 
 class B2COrderHistoryPagination(PageNumberPagination):
@@ -26,4 +28,19 @@ class B2COrderHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     http_method_names = ['get', 'head', 'options']
 
     def get_queryset(self):
-        return OrderFilterService.filter_orders_by_status()
+        user = self.request.user
+        profile = OrderService.get_user_profile(user)
+
+        if isinstance(profile, Employer):
+            return B2COrder.objects.filter(employer=profile, status__in=[
+                AssignableOrderStatus.COMPLETED,
+                AssignableOrderStatus.CANCELLED
+            ])
+
+        elif isinstance(profile, Manager):
+            return B2COrder.objects.filter(employer=profile.employer, status__in=[
+                AssignableOrderStatus.COMPLETED,
+                AssignableOrderStatus.CANCELLED
+            ])
+
+        return B2COrder.objects.none()
