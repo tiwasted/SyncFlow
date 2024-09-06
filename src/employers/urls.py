@@ -1,6 +1,5 @@
 from django.urls import path
 from .views.registration_employer_views import EmployerRegistrationView
-from .views.password_change_views import ChangePasswordView
 from .views.employer_views import EmployerView
 from .views.role_views import RoleListView, RoleCreateView
 from .views.employer_city_views import AddCountriesView, AddCitiesView, AvailableCitiesView, ListCitiesView
@@ -11,7 +10,6 @@ from .views.set_city_views import SetPrimaryCityView, GetPrimaryCityView
 
 urlpatterns = [
     path('register/', EmployerRegistrationView.as_view(), name='employer_registration'),  # Регистрация Работодателя (POST)
-    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('employer-preferences/', EmployerView.as_view(), name='employer-preferences'),
 
     path('add-countries/', AddCountriesView.as_view(), name='add-countries'),
