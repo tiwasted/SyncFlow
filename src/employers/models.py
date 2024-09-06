@@ -6,6 +6,8 @@ from users.models import CustomUser
 
 class Employer(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='employer_profile')
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     company_name = models.CharField(max_length=50)
     company_description = models.TextField()
     selected_countries = models.ManyToManyField(Country, related_name='employers', blank=True)
