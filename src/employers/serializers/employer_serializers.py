@@ -10,3 +10,9 @@ class EmployerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employer
         fields = ['user', 'company_name', 'company_description', 'countries', 'cities']
+
+
+class EmployerInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employer
+        fields = ['first_name', 'last_name', 'company_name', 'company_description']

@@ -10,6 +10,13 @@ from employers.models import Manager
 User = get_user_model()
 
 
+class ManagerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Manager
+        fields = ['id', 'first_name', 'last_name']
+
+
 # Сериализатор для создания менеджеров
 class ManagerCreateSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(required=True)
@@ -46,7 +53,7 @@ class ManagerCreateSerializer(serializers.ModelSerializer):
             return user
 
 
-class ManagerSerializer(serializers.ModelSerializer):
+class ManagerInfoSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(source='user.phone')
     cities = CitySerializer(many=True, read_only=True)
 

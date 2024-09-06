@@ -32,8 +32,10 @@ class EmployeeListView(generics.ListAPIView):
         return Employee.objects.none()
 
 
-# Удаление сотрудников через Работодателя
 class EmployeeDeleteView(generics.DestroyAPIView):
+    """
+    Удаление сотрудника через Работодателя
+    """
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     permission_classes = [permissions.IsAuthenticated, IsEmployer]

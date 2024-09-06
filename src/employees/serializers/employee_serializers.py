@@ -33,7 +33,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         return instance
 
 
-class AssignedEmployeeSerializer(serializers.ModelSerializer):
+class EmployeeIDSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Employee
@@ -57,7 +57,7 @@ class AssigningEmployeeToOrderSerializer(serializers.ModelSerializer):
 
 class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
     """Serializer для списка сотрудников, основанный на заказах за выбранную дату."""
-    employees = AssignedEmployeeSerializer(source='assigned_employees', many=True, read_only=True)
+    employees = EmployeeIDSerializer(source='assigned_employees', many=True, read_only=True)
 
     class Meta:
         model = B2COrder

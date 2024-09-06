@@ -1,8 +1,9 @@
-from rest_framework import status
+from rest_framework import status, generics
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from employers.models import Employer
-from employers.serializers.employer_serializers import EmployerSerializer
+from employers.serializers.employer_serializers import EmployerSerializer, EmployerInfoSerializer
 from orders.models import Country, City
 
 
