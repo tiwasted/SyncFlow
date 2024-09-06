@@ -9,8 +9,7 @@ from employers.models import Employer
 from employers.models import Manager
 from orders.services import OrderService
 
-from employers.serializers.manager_serializers import ManagerSerializer, ManagerSerializerUpdate
-
+from employers.serializers.manager_serializers import ManagerSerializer, ManagerSerializerUpdate, ManagerInfoSerializer
 
 User = get_user_model()
 
@@ -20,7 +19,7 @@ class ManagerListView(generics.ListAPIView):
     Список менеджеров для Работодателя и других Менеджеров этого работодателя.
     """
     queryset = Manager.objects.all()
-    serializer_class = ManagerSerializer
+    serializer_class = ManagerInfoSerializer
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
     def get_queryset(self):
