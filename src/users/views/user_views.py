@@ -1,6 +1,8 @@
 from rest_framework import generics, serializers
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
+from employers.permissions import IsEmployer
 from employers.serializers.employer_serializers import EmployerInfoSerializer
 from employers.serializers.manager_serializers import ManagerSerializer
 from employees.serializers.employee_serializers import EmployeeIDSerializer
@@ -41,6 +43,7 @@ class UserDetailView(generics.GenericAPIView):
 
 
 class UserUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsEmployer]
 
     def put(self, request, *args, **kwargs):
         """
