@@ -5,7 +5,7 @@ from django.db import transaction
 from orders.serializers.city_order_serializers import CitySerializer, CityInfoSerializer
 from users.validators import validate_password
 from users.models import CustomUser
-from employers.models import Manager
+from employers.models import Manager, ManagerCityAssignment
 from orders.models import City
 
 User = get_user_model()
@@ -109,6 +109,17 @@ class ManagerSerializerUpdate(serializers.ModelSerializer):
                 instance.cities.remove(city)
             except City.DoesNotExist:
                 raise serializers.ValidationError(f"Город с id {city_id} не существует.")
+
+            # Сброс основного города, если он был удален
+            primary_city_assignment = ManagerCityAssignment.objects.filter(
+                manager=instance,
+                is_primary=True
+            ).first()
+
+            if primary_city_assignment and primary_city_assignment.city_id not in [city.id for city in
+                                                                                   instance.cities.all()]:
+                primary_city_assignment.is_primary = False
+                primary_city_assignment.save()
 
         instance.save()
         return instance

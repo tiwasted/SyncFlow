@@ -9,8 +9,10 @@ from orders.permissions import IsEmployerOrManager
 from orders.services import OrderService
 
 
-# API для выбора основного города
 class SetPrimaryCityView(APIView):
+    """
+    Представление для выбора основного города
+    """
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
     serializer_class = SetPrimaryCitySerializer
 
@@ -20,7 +22,7 @@ class SetPrimaryCityView(APIView):
 
         if not city_id:
             return Response({"error": "Необходимо указать ID города."},
-                            status=status.HTTP_400_BAD)
+                            status=status.HTTP_400_BAD_REQUEST)
 
         if user.role == 'employer':
             employer = user.employer_profile

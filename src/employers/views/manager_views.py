@@ -81,5 +81,3 @@ class ManagerDeleteView(generics.DestroyAPIView):
         self.objects = self.get_object()
         self.perform_destroy(self.objects)
         return Response({'detail': 'Менеджер успешно удален'}, status=status.HTTP_204_NO_CONTENT)
-
-
