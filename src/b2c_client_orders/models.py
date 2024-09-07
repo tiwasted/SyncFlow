@@ -24,15 +24,7 @@ class B2COrder(AssignableOrder):
             Schedule.objects.create(
                 b2c_order=self,
                 assigned_employee=employee,
-
             )
-
-    def __str__(self):
-        return self.order_time.strftime('%H:%M') + ' ' + self.order_name
-
-    @property
-    def formatted_order_time(self):
-        return self.order_time.strftime('%H:%M')
 
 
 class B2COrderImage(models.Model):

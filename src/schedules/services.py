@@ -155,10 +155,14 @@ class OrderScheduleService:
             city=primary_city,
             status = AssignableOrderStatus.IN_WAITING
         )
-        logger.info(f"Заказы для сотрудника: {orders}")
+
+        logger.info(f"Количество заказов для сотрудника: {orders.count()}")
+        # Или, если нужно идентификаторы заказов:
+        logger.info(f"Заказы для сотрудника: {[order.id for order in orders]}")
 
         order_time = orders.order_by('order_time')
         logger.info(f"Заказы отсортированы по времени: {order_time}")
 
         logger.info("Успешное завершение функции get_orders_for_employee")
+
         return order_time

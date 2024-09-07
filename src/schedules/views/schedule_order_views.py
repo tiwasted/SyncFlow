@@ -50,21 +50,31 @@ class OrderScheduleViewSet(viewsets.ModelViewSet):
         date = request.query_params.get('date')
         employee_id = request.query_params.get('employee_id')
 
+        logger.info(f"Полученные параметры - дата: {date}, ID сотрудника: {employee_id}")
+
         if not date:
+            logger.error("Дата не указана")
             return Response({"detail": "Дата является обязательной"}, status=status.HTTP_400_BAD_REQUEST)
 
         if not employee_id:
+            logger.error("ID сотрудника не указан")
             return Response({"detail": "ID сотрудника является обязательным"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             employee = Employee.objects.get(id=employee_id)
         except Employee.DoesNotExist:
+            logger.error(f"Сотрудник с ID {employee_id} не найден")
             return Response({"detail": "Сотрудник не найден"}, status=status.HTTP_404_NOT_FOUND)
 
         try:
             # Получаем заказы для конкретного сотрудника
+            logger.info(f"Получаем заказы для сотрудника {employee}")
             orders = OrderScheduleService.get_orders_for_employee(employee, date)
             serializer = SpecificEmployeeOrderSerializer(orders, many=True)
             return Response(serializer.data)
         except ValidationError as e:
+            logger.error(f"Ошибка валидации: {str(e)}")
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.critical(f"Непредвиденная ошибка: {str(e)}", exc_info=True)
+            return Response({"detail": "Произошла неожиданная ошибка"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
