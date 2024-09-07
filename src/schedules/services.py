@@ -25,56 +25,79 @@ class OrderScheduleService:
         logger.info("Начало выполнения функции get_orders_for_date_and_user")
         try:
             # Получение даты
+            logger.debug(f"Полученное значение даты: {date}")
             date = parse_date(date)
             if not date:
+                logger.error(f"Ошибка: некорректная дата - {date}")
                 raise ValidationError("Некорректная дата")
 
-            logger.info(f"Дата: {date}")
+            logger.info(f"Дата после парсинга: {date}")
 
             # Получение пользователя и работодателя по ID
-            user = CustomUser.objects.get(id=user_id)
+            logger.debug(f"Полученный user_id: {user_id}")
+            try:
+                user = CustomUser.objects.get(id=user_id)
+            except CustomUser.DoesNotExist:
+                logger.error(f"Пользователь не найден: {user_id}")
+                raise ValidationError("Пользователь не найден")
+
             logger.info(f"Пользователь: {user}")
 
+            # Получение профиля пользователя
             profile = OrderService.get_user_profile(user)
+            if profile is None:
+                logger.error(f"Не удалось получить профиль для пользователя с ID {user_id}")
+                raise ValidationError("Не удалось получить профиль пользователя")
+
             logger.info(f"Профиль пользователя: {profile}")
 
             # Получение основного города пользователя
             primary_city = OrderService.get_primary_city(user)
+            if primary_city is None:
+                logger.error(f"Не удалось получить основной город для пользователя с ID {user_id}")
+                raise ValidationError("Не удалось получить город пользователя")
+
             logger.info(f"Основной город пользователя: {primary_city}")
 
             if not primary_city:
                 raise ValidationError("Не удалось получить город пользователя")
 
             # Фильтрация заказов по дате, статусу, работодателю и основному городу
+            logger.debug(f"Фильтрация заказов на дату {date}, город {primary_city}, статус 'IN_WAITING'")
             orders = OrderService.get_orders_by_date_and_time(
                 date=date,
                 city=primary_city,
                 status=AssignableOrderStatus.IN_WAITING
             )
-            logger.info(f"Заказы: {orders}")
+            logger.info(f"Количество найденных заказов: {len(orders)}")
 
             if user.role == CustomUser.EMPLOYER:
+                logger.debug(f"Фильтрация заказов для работодателя {profile}")
                 orders = orders.filter(employer=profile)
                 logger.info("Фильтрация заказов по работодателю")
             elif user.role == CustomUser.MANAGER:
+                logger.debug(f"Фильтрация заказов для менеджера, работодатель {profile.employer}")
                 employer = profile.employer
                 orders = orders.filter(employer=employer)
                 logger.info("Фильтрация заказов по менеджеру")
             else:
+                logger.error(f"Некорректная роль пользователя: {user.role}")
                 raise ValidationError("Пользователь не является работодателем или менеджером")
 
             logger.info("Успешное завершение get_orders_for_date_and_user")
             return orders
 
         except CustomUser.DoesNotExist:
+            logger.error(f"Пользователь с ID {user_id} не существует")
             raise ValidationError("Пользователь не найден")
         except Employer.DoesNotExist:
+            logger.error(f"Employer не найден для пользователя с ID {user_id}")
             raise ValidationError("Employer не найден для данного пользователя")
         except ValueError as e:
             logger.error(f"Ошибка при получении заказов: {str(e)}")
             raise ValidationError(f"Произошла ошибка: {str(e)}")
         except Exception as e:
-            logger.error(f"Непредвиденная ошибка: {str(e)}")
+            logger.critical(f"Непредвиденная ошибка: {str(e)}", exc_info=True)
             raise ValidationError("Произошла неожиданная ошибка")
 
     @staticmethod

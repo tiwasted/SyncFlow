@@ -67,15 +67,15 @@ class OrderService:
                 manager=profile,
                 is_primary=True
             ).first()
-        elif isinstance(profile, Employee):
-            employer = profile.employer
-            if not employer:
-                logger.warning("Сотрудник %s не связан с работодателем", profile)
-                raise ValidationError("Сотрудник не связан с работодателем")
-            primary_city_assignment = EmployerCityAssignment.objects.filter(
-                employer=employer,
-                is_primary=True
-            ).first()
+        # elif isinstance(profile, Employee):
+        #     employer = profile.employer
+        #     if not employer:
+        #         logger.warning("Сотрудник %s не связан с работодателем", profile)
+        #         raise ValidationError("Сотрудник не связан с работодателем")
+        #     primary_city_assignment = EmployerCityAssignment.objects.filter(
+        #         employer=employer,
+        #         is_primary=True
+        #     ).first()
         else:
             logger.warning("Профиль %s не является допустимым типом", profile)
             raise ValidationError("Профиль пользователя не является работодателем, менеджером или сотрудником")
