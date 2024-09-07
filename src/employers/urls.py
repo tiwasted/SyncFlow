@@ -9,7 +9,7 @@ from .views.set_city_views import SetPrimaryCityView, GetPrimaryCityView
 
 
 urlpatterns = [
-    path('register/', EmployerRegistrationView.as_view(), name='employer_registration'),  # Регистрация Работодателя (POST)
+    path('register/', EmployerRegistrationView.as_view(), name='employer_registration'),
     path('employer-preferences/', EmployerView.as_view(), name='employer-preferences'),
 
     path('add-countries/', AddCountriesView.as_view(), name='add-countries'),

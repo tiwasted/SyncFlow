@@ -22,18 +22,25 @@ class OrderScheduleService:
         """
         Получение заказов на определенную дату для пользователя.
         """
+        logger.info("Начало выполнения функции get_orders_for_date_and_user")
         try:
             # Получение даты
             date = parse_date(date)
             if not date:
                 raise ValidationError("Некорректная дата")
 
+            logger.info(f"Дата: {date}")
+
             # Получение пользователя и работодателя по ID
             user = CustomUser.objects.get(id=user_id)
+            logger.info(f"Пользователь: {user}")
+
             profile = OrderService.get_user_profile(user)
+            logger.info(f"Профиль пользователя: {profile}")
 
             # Получение основного города пользователя
             primary_city = OrderService.get_primary_city(user)
+            logger.info(f"Основной город пользователя: {primary_city}")
 
             if not primary_city:
                 raise ValidationError("Не удалось получить город пользователя")
@@ -44,15 +51,19 @@ class OrderScheduleService:
                 city=primary_city,
                 status=AssignableOrderStatus.IN_WAITING
             )
+            logger.info(f"Заказы: {orders}")
 
             if user.role == CustomUser.EMPLOYER:
                 orders = orders.filter(employer=profile)
+                logger.info("Фильтрация заказов по работодателю")
             elif user.role == CustomUser.MANAGER:
                 employer = profile.employer
                 orders = orders.filter(employer=employer)
+                logger.info("Фильтрация заказов по менеджеру")
             else:
                 raise ValidationError("Пользователь не является работодателем или менеджером")
 
+            logger.info("Успешное завершение get_orders_for_date_and_user")
             return orders
 
         except CustomUser.DoesNotExist:
@@ -71,26 +82,33 @@ class OrderScheduleService:
         """
         Получение списка сотрудников на основании заказов за выбранную дату.
         """
+        logger.info("Начало выполнения функции get_employees_by_orders")
 
         # Получаем основной город пользователя
         primary_city = OrderService.get_primary_city(user)
+        logger.info(f"Основной город пользователя: {primary_city}")
 
         # Получаем заказы на указанную дату
         orders = OrderService.get_orders_by_date_and_time(date)
+        logger.info(f"Заказы на дату {date}: {orders}")
 
         # Если основной город указан, фильтруем заказы по этому городу
         if primary_city:
             orders = orders.filter(city=primary_city)
+            logger.info("Фильтрация заказов по основному городу")
 
         # Извлекаем уникальных сотрудников из заказов
         employers = Employer.objects.filter(
             assignableorder__in=orders
         ).distinct()
+        logger.info(f"Работодатели: {employers}")
 
         employees = Employee.objects.filter(
             employer__in=employers
         ).distinct()
+        logger.info(f"Сотрудники: {employees}")
 
+        logger.info("Успешное завершение функции get_employees_by_orders")
         return employees
 
     @staticmethod
@@ -114,5 +132,10 @@ class OrderScheduleService:
             city=primary_city,
             status = AssignableOrderStatus.IN_WAITING
         )
+        logger.info(f"Заказы для сотрудника: {orders}")
+
         order_time = orders.order_by('order_time')
+        logger.info(f"Заказы отсортированы по времени: {order_time}")
+
+        logger.info("Успешное завершение функции get_orders_for_employee")
         return order_time

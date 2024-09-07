@@ -15,8 +15,12 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import os
 
+from tutorial.settings import BASE_DIR
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -258,7 +262,7 @@ LOGGING = {
         'file': {
             'level': 'INFO' ,
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'src/logs/django.log',
+            'filename': os.path.join(BASE_DIR, 'logs/django.log'),
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'verbose',

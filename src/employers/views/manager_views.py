@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
+from yaml import serialize
 
 from employers.permissions import IsEmployer
 from orders.permissions import IsEmployerOrManager
@@ -41,8 +42,10 @@ class ManagerDetailView(generics.RetrieveAPIView):
     lookup_field = 'pk'
 
 
-# Редактирование менеджеров через Работодателя
 class ManagerUpdateView(generics.RetrieveUpdateAPIView):
+    """
+    Редактирование менеджеров через Работодателя
+    """
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializerUpdate
     permission_classes = [permissions.IsAuthenticated, IsEmployer]
@@ -53,9 +56,19 @@ class ManagerUpdateView(generics.RetrieveUpdateAPIView):
             return Manager.objects.filter(employer=user.employer_profile)
         return Manager.objects.none()
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
-# Удаление менеджеров через Работодателя
+
 class ManagerDeleteView(generics.DestroyAPIView):
+    """
+    Удаление менеджера через Работодателя
+    """
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
     permission_classes = [permissions.IsAuthenticated, IsEmployer]
@@ -68,3 +81,5 @@ class ManagerDeleteView(generics.DestroyAPIView):
         self.objects = self.get_object()
         self.perform_destroy(self.objects)
         return Response({'detail': 'Менеджер успешно удален'}, status=status.HTTP_204_NO_CONTENT)
+
+

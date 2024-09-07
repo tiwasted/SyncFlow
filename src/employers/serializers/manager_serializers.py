@@ -2,10 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.db import transaction
 
-from orders.serializers.city_order_serializers import CitySerializer
+from orders.serializers.city_order_serializers import CitySerializer, CityInfoSerializer
 from users.validators import validate_password
 from users.models import CustomUser
 from employers.models import Manager
+from orders.models import City
 
 User = get_user_model()
 
@@ -62,13 +63,18 @@ class ManagerInfoSerializer(serializers.ModelSerializer):
         fields = ['id', 'phone', 'first_name', 'last_name', 'cities']
 
 
-# Сериализатор для менеджеров
 class ManagerSerializerUpdate(serializers.ModelSerializer):
+    """
+    Сериализатор для обновления данных менеджера
+    """
     phone = serializers.CharField(write_only=True, required=False)
+    cities = CityInfoSerializer(many=True, read_only=True)
+    add_cities = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
+    remove_cities = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
 
     class Meta:
         model = Manager
-        fields = ['id', 'phone', 'first_name', 'last_name']
+        fields = ['id', 'phone', 'first_name', 'last_name', 'cities', 'add_cities', 'remove_cities']
 
     def update(self, instance, validated_data):
         # Обновляем данные менеджера
@@ -85,6 +91,24 @@ class ManagerSerializerUpdate(serializers.ModelSerializer):
 
             instance.user.phone = phone
             instance.user.save()
+
+        # Добавляем новые города
+        add_cities = validated_data.get('add_cities', [])
+        for city_id in add_cities:
+            try:
+                city = City.objects.get(id=city_id)
+                instance.cities.add(city)
+            except City.DoesNotExist:
+                raise serializers.ValidationError(f"Город с id {city_id} не существует.")
+
+        # Удаляем города
+        remove_cities = validated_data.get('remove_cities', [])
+        for city_id in remove_cities:
+            try:
+                city = City.objects.get(id=city_id)
+                instance.cities.remove(city)
+            except City.DoesNotExist:
+                raise serializers.ValidationError(f"Город с id {city_id} не существует.")
 
         instance.save()
         return instance
