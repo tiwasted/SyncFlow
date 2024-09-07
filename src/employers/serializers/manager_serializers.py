@@ -67,14 +67,14 @@ class ManagerSerializerUpdate(serializers.ModelSerializer):
     """
     Сериализатор для обновления данных менеджера
     """
-    phone = serializers.CharField(write_only=True, required=False)
+    phone = serializers.CharField(source='user.phone')
     cities = CityInfoSerializer(many=True, read_only=True)
     add_cities = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
     remove_cities = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
 
     class Meta:
         model = Manager
-        fields = ['id', 'phone', 'first_name', 'last_name', 'cities', 'add_cities', 'remove_cities']
+        fields = ['id', 'first_name', 'last_name', 'phone', 'cities', 'add_cities', 'remove_cities']
 
     def update(self, instance, validated_data):
         # Обновляем данные менеджера
@@ -82,8 +82,8 @@ class ManagerSerializerUpdate(serializers.ModelSerializer):
         instance.last_name = validated_data.get('last_name', instance.last_name)
 
         # Обновляем номер телефона пользователя
-        user_data = validated_data.get('user', {})
-        phone = user_data.get('phone')
+        # user_data = validated_data.get('user', {})
+        phone = validated_data.get('phone')
         if phone:
             # Проверяем, что номер телефона уникален
             if CustomUser.objects.filter(phone=phone).exclude(id=instance.user.id).exists():
