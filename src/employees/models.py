@@ -14,7 +14,6 @@ class Employee(models.Model):
         return f"{self.first_name} {self.last_name}"
 
     def delete(self, *args, **kwargs):
-
-        # self.user.delete()
-
-        super().delete(*args, **kwargs)
+        # Деактивируем сотрудника, но не удаляем из базы
+        self.is_active = False
+        self.save()

@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from b2c_client_orders.models import B2COrder
 from users.models import CustomUser
 from employees.models import Employee
 
@@ -29,3 +31,71 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class EmployeeIDSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Employee
+        fields = ['id', 'first_name', 'last_name']
+
+
+class EmployeeInfoSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(source='user.phone')
+
+    class Meta:
+        model = Employee
+        fields = ['first_name', 'last_name', 'phone']
+
+
+class AssigningEmployeeToOrderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Employee
+        fields = ['id', 'first_name', 'last_name']
+
+
+class ListEmployeeByOrderSerializer(serializers.ModelSerializer):
+    """Serializer для списка сотрудников, основанный на заказах за выбранную дату."""
+    employees = EmployeeIDSerializer(source='assigned_employees', many=True, read_only=True)
+
+    class Meta:
+        model = B2COrder
+        fields = ['id',
+                  'order_name',
+                  'order_date',
+                  'order_time',
+                  'address',
+                  'phone_number_client',
+                  'name_client',
+                  'price',
+                  'description',
+                  'status',
+                  'employees',
+                  'city'
+                 ]
+
+    def get_employees(self, obj):
+        """
+        Получение списка сотрудников для данного заказа.
+        """
+        return obj.assigned_employees.all()
+
+
+class SpecificEmployeeOrderSerializer(serializers.ModelSerializer):
+    """Serializer для списка заказов для конкретного сотрудника."""
+
+    class Meta:
+        model = B2COrder
+        fields = ['id',
+                  'order_name',
+                  'order_date',
+                  'order_time',
+                  'address',
+                  'phone_number_client',
+                  'name_client',
+                  'price',
+                  'description',
+                  'status',
+                  'city'
+                 ]

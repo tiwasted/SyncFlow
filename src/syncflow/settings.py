@@ -15,8 +15,6 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-@q%=ctl)$$&v12+q@3k#p3@f$o-st0!02jx8*t6ml@zg4w1w&^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -81,7 +79,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://192.168.1.140:3000',
     'http://localhost:3001',
     'http://192.168.1.140:3001',
-    'http://85.202.195.116',
 ]
 
 ROOT_URLCONF = 'syncflow.urls'

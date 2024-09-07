@@ -7,9 +7,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=11, unique=True, null=True, blank=True)
     EMPLOYER = 'employer'
     EMPLOYEE = 'employee'
+    MANAGER = 'manager'
     ROLE_CHOICES = [
         (EMPLOYER, 'Employer'),
         (EMPLOYEE, 'Employee'),
+        (MANAGER, 'Manager')
     ]
 
     role = models.CharField(max_length=15, choices=ROLE_CHOICES)
