@@ -5,3 +5,6 @@ refresh_token.txt
 src/media
 src/logs
 src/api_integration
+src/users/serializers/__pycache__
+src/users/views/__pycache__
+.idea/workspace.xml
