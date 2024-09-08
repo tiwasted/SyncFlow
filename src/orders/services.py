@@ -3,6 +3,8 @@ from datetime import timedelta, datetime
 from django.db.models import Q
 import logging
 
+from rest_framework.fields import empty
+
 from b2c_client_orders.models import B2COrder
 from employees.models import Employee
 from employers.models import Employer, EmployerCityAssignment, Manager, ManagerCityAssignment
@@ -103,18 +105,30 @@ class OrderService:
         return employees
 
     @staticmethod
-    def get_orders_by_date_and_time(date=None, city=None, status=None):
+    def get_orders_by_date_and_time(user, date=None, city=None, status=None):
         """
         Получение заказов по выбранной дате, отсортированных по времени.
         """
         logger.debug("Получение заказов по дате: %s, городу: %s, статусу: %s", date, city, status)
-        queryset = B2COrder.objects.all()
+        primary_city = OrderService.get_primary_city(user)
+
+        if user.role == 'employer':
+            employer = user.employer_profile
+        elif user.role == 'manager':
+            employer = user.manager_profile.employer
+        else:
+            return B2COrder.objects.none()
+
+        # Фильтруем заказы по работодателю
+        queryset = B2COrder.objects.filter(employer=employer)
 
         if date:
             queryset = queryset.filter(order_date=date)
 
         if city:
             queryset = queryset.filter(city=city)
+        elif primary_city:
+            queryset = queryset.filter(city=primary_city)
 
         if status:
             queryset = queryset.filter(status=status)
@@ -199,9 +213,20 @@ class OrderDashboardService:
         if not primary_city:
             return B2COrder.objects.none()
 
+            # Определяем работодателя в зависимости от роли пользователя
+        if user.role == 'employer':
+            employer = user.employer_profile
+        elif user.role == 'manager':
+            employer = user.manager_profile.employer  # Для менеджера получаем работодателя
+        else:
+            return B2COrder.objects.none()  # Возвращаем пустой QuerySet для других ролей
+
         # Фильтруем заказы по дате и основному городу
         return B2COrder.objects.filter(
-            Q(order_date=tomorrow) & Q(city=primary_city) & Q(status=AssignableOrderStatus.IN_PROCESSING)
+            Q(order_date=tomorrow) &
+            Q(city=primary_city) &
+            Q(status=AssignableOrderStatus.IN_PROCESSING) &
+            Q(employer=employer)
         )
 
     @staticmethod
@@ -215,7 +240,18 @@ class OrderDashboardService:
         if not primary_city:
             return B2COrder.objects.none()  # Возвращаем пустой QuerySet, если нет основного города
 
+            # Определяем работодателя в зависимости от роли пользователя
+        if user.role == 'employer':
+            employer = user.employer_profile
+        elif user.role == 'manager':
+            employer = user.manager_profile.employer  # Для менеджера получаем работодателя
+        else:
+            return B2COrder.objects.none()  # Возвращаем пустой QuerySet для других ролей
+
         # Фильтруем заказы без даты и по основному городу
         return B2COrder.objects.filter(
-            Q(order_date__isnull=True) & Q(city=primary_city) & Q(status=AssignableOrderStatus.IN_PROCESSING)
+            Q(order_date__isnull=True) &
+            Q(city=primary_city) &
+            Q(status=AssignableOrderStatus.IN_PROCESSING) &
+            Q(employer=employer)
         )
