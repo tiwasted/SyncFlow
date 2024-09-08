@@ -12,6 +12,7 @@ from orders.serializers.order_serializers import B2COrderSerializer
 from employees.models import Employee
 from orders.permissions import CanViewOrder
 from orders.services import OrderService, OrderDashboardService
+from users.models import CustomUser
 
 logger = logging.getLogger(__name__)
 
@@ -19,18 +20,6 @@ logger = logging.getLogger(__name__)
 class BaseOrderViewSet(viewsets.ModelViewSet):
     serializer_class = B2COrderSerializer
     permission_classes = [permissions.IsAuthenticated, CanViewOrder]
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.role == 'employer':
-            # Для работодателя возвращаем только его заказы
-            return B2COrder.objects.filter(employer=user.employer_profile)
-        elif user.role == 'manager':
-            # Для менеджера возвращаем заказы работодателя, к которому он привязан
-            return B2COrder.objects.filter(employer=user.manager_profile.employer)
-        else:
-            # Для сотрудников можно добавить фильтрацию, если нужно
-            return B2COrder.objects.none()
 
     def perform_create(self, serializer):
         OrderDashboardService.create_order(self.request.user, serializer)
@@ -126,7 +115,7 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
 
         primary_city = OrderService.get_primary_city(user)
 
-        orders = OrderService.get_orders_by_date_and_time(date=date, city=primary_city, status=AssignableOrderStatus.IN_PROCESSING)
+        orders = OrderService.get_orders_by_date_and_time(user, date=date, city=primary_city, status=AssignableOrderStatus.IN_PROCESSING)
 
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
