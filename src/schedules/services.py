@@ -67,7 +67,8 @@ class OrderScheduleService:
             orders = OrderService.get_orders_by_date_and_time(
                 date=date,
                 city=primary_city,
-                status=AssignableOrderStatus.IN_WAITING
+                status=AssignableOrderStatus.IN_WAITING,
+                user=user
             )
             logger.info(f"Количество найденных заказов: {len(orders)}")
 
