@@ -17,9 +17,20 @@ logger = logging.getLogger(__name__)
 
 
 class BaseOrderViewSet(viewsets.ModelViewSet):
-    queryset = B2COrder.objects.all()
     serializer_class = B2COrderSerializer
     permission_classes = [permissions.IsAuthenticated, CanViewOrder]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'employer':
+            # Для работодателя возвращаем только его заказы
+            return B2COrder.objects.filter(employer=user.employer_profile)
+        elif user.role == 'manager':
+            # Для менеджера возвращаем заказы работодателя, к которому он привязан
+            return B2COrder.objects.filter(employer=user.manager_profile.employer)
+        else:
+            # Для сотрудников можно добавить фильтрацию, если нужно
+            return B2COrder.objects.none()
 
     def perform_create(self, serializer):
         OrderDashboardService.create_order(self.request.user, serializer)
