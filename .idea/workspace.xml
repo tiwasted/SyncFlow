@@ -5,7 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="adbefadb-3927-43cf-b778-f778d053b147" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/syncflow/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/syncflow/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/amoCRM.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/amoCRM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/amoCRM_filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/amoCRM_filter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/amoCRM_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/amoCRM_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/errors/amoCRM_E.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/errors/amoCRM_E.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/models/amoCRM_M.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/models/amoCRM_M.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/models/amoCRM_filter_M.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/amocrm/v4/models/amoCRM_filter_M.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/api_integration/integrations/amocrm-api/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orders/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/orders/services.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +37,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/api_integration/integrations/amo_integration.py" root0="FORCE_HIGHLIGHTING" />
@@ -39,16 +56,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.amo_integration.executor&quot;: &quot;Run&quot;,
-    &quot;Python.order_views.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/tiw/projects/X-MVP-server&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.amo_integration.executor": "Run",
+    "Python.order_views.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Merging deploy",
+    "last_opened_file_path": "/home/tiw/projects/X-MVP-server"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.amo_integration">
     <configuration name="amo_integration" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SyncFlow" />
@@ -104,7 +121,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-5a2391486177-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13763.11" />
+        <option value="bundled-python-sdk-98f27166c754-ba05f1cad1b1-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.21829.153" />
       </set>
     </attachedChunks>
   </component>

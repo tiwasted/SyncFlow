@@ -3,8 +3,6 @@ from datetime import timedelta, datetime
 from django.db.models import Q
 import logging
 
-from rest_framework.fields import empty
-
 from b2c_client_orders.models import B2COrder
 from employees.models import Employee
 from employers.models import Employer, EmployerCityAssignment, Manager, ManagerCityAssignment
@@ -222,12 +220,16 @@ class OrderDashboardService:
             return B2COrder.objects.none()  # Возвращаем пустой QuerySet для других ролей
 
         # Фильтруем заказы по дате и основному городу
-        return B2COrder.objects.filter(
+        orders = B2COrder.objects.filter(
             Q(order_date=tomorrow) &
             Q(city=primary_city) &
             Q(status=AssignableOrderStatus.IN_PROCESSING) &
             Q(employer=employer)
         )
+
+        order_time = orders.order_by('order_time')
+
+        return order_time
 
     @staticmethod
     def get_orders_without_dates(user):
@@ -249,9 +251,13 @@ class OrderDashboardService:
             return B2COrder.objects.none()  # Возвращаем пустой QuerySet для других ролей
 
         # Фильтруем заказы без даты и по основному городу
-        return B2COrder.objects.filter(
+        orders = B2COrder.objects.filter(
             Q(order_date__isnull=True) &
             Q(city=primary_city) &
             Q(status=AssignableOrderStatus.IN_PROCESSING) &
             Q(employer=employer)
         )
+
+        order_time = orders.order_by('order_time')
+
+        return order_time
