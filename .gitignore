@@ -1,5 +1,4 @@
 # Enviroment variables
-.env
 access_token.txt
 refresh_token.txt
 src/media
@@ -7,6 +6,7 @@ src/logs
 src/api_integration
 # Byte-compiled / optimized / DLL files
 __pycache__/
+.idea/
 src/**/__pycache__/
 *.py[cod]
 *$py.class
