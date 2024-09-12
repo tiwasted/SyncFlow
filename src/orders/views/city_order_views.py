@@ -1,6 +1,4 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, generics
-from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework.generics import ListAPIView
 from orders.models import Country, City
 from orders.serializers.city_order_serializers import CountrySerializer, CitySerializer

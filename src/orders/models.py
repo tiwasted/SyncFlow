@@ -22,6 +22,14 @@ class City(models.Model):
         return f"{self.name}, {self.country.name}"
 
 
+class PaymentMethod(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
 class AssignableOrderStatus(models.TextChoices):
     IN_PROCESSING = 'in_processing', 'В обработке'
     IN_WAITING = 'in_waiting', 'В ожидании'

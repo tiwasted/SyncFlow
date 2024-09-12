@@ -6,6 +6,7 @@ from .views.employer_city_views import AddCountriesView, AddCitiesView, Availabl
 from .views.manager_views import ManagerListView, ManagerDetailView, ManagerUpdateView, ManagerDeleteView
 from .views.assign_city_to_manager import AssignCityToManagerView, ManagerCitiesView
 from .views.set_city_views import SetPrimaryCityView, GetPrimaryCityView
+from .views.employer_payment_method_views import AddPaymentMethodView, AvailablePaymentMethodsView
 
 
 urlpatterns = [
@@ -30,4 +31,7 @@ urlpatterns = [
     path('dashboard/list-cities/', ListCitiesView.as_view(), name='list-cities'),
     path('select-primary-city/', SetPrimaryCityView.as_view(), name='select-primary-city'),
     path('get-primary-city/', GetPrimaryCityView.as_view(), name='get-primary-city'),
+
+    path('add-payment-method/', AddPaymentMethodView.as_view(), name='add-payment-method'),
+    path('available-payment-methods/', AvailablePaymentMethodsView.as_view(), name='available-payment-methods'),
 ]
