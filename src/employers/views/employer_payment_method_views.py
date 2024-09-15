@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 from employers.models import PaymentMethod
 from employers.permissions import IsEmployer
+from orders.services import OrderService
+from schedules.services import CustomUser
 
 
 class AddPaymentMethodView(APIView):
@@ -40,8 +42,16 @@ class AvailablePaymentMethodsView(APIView):
         """
         Возвращает список доступных способов оплаты для Работодателя
         """
-        employer = request.user
-        payment_methods = employer.available_payment_methods.all()
+        user = request.user
+
+        if user.role == CustomUser.EMPLOYER:
+            payment_methods = user.employer_profile.available_payment_methods.all()
+        elif user.role == CustomUser.MANAGER:
+            payment_methods = user.manager_profile.employer.available_payment_methods.all()
+        elif user.role == CustomUser.EMPLOYEE:
+            payment_methods = user.employee_profile.employer.available_payment_methods.all()
+        else:
+            return Response({"error": "Неизвестная роль пользователя"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Преобразуем QuerySet в список словарей
         payment_method_data = [
