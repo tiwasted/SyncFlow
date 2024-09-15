@@ -7,7 +7,7 @@ from employees.serializers.employee_serializers import EmployeeSerializer, Assig
 from employers.permissions import IsEmployer
 
 from orders.permissions import IsEmployerOrManager
-from orders.services import OrderService
+from orders.services.order_service import OrderService
 
 
 class EmployeeListView(generics.ListAPIView):

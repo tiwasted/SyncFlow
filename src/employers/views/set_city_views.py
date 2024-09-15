@@ -6,7 +6,7 @@ from employers.models import EmployerCityAssignment, ManagerCityAssignment
 from employers.serializers.employer_city_serializer import SetPrimaryCitySerializer
 from orders.permissions import IsEmployerOrManager
 
-from orders.services import OrderService
+from orders.services.order_service import OrderService
 
 
 class SetPrimaryCityView(APIView):
