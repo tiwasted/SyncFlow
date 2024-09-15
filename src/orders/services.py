@@ -160,6 +160,9 @@ class OrderDashboardService:
 
     @staticmethod
     def update_order(user, serializer):
+        """
+        Обновление заказа в зависимости от роли пользователя (менеджер или работодатель).
+        """
         logger.debug("Обновление заказа для пользователя: %s", user)
         if hasattr(user, 'manager_profile'):
             manager = user.manager_profile
@@ -172,6 +175,9 @@ class OrderDashboardService:
 
     @staticmethod
     def update_order_status(order, employee, action, report=''):
+        """
+        Логика обновления статуса заказа.
+        """
         logger.debug("Обновление статуса заказа для заказа: %s, сотрудник: %s, действие: %s", order, employee, action)
 
         if not order.assigned_employees.filter(id=employee.id).exists():

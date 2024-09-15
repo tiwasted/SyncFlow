@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from employers.models import PaymentMethod
 from employers.permissions import IsEmployer
-from orders.services import OrderService
+
 from schedules.services import CustomUser
 
 
@@ -40,7 +40,7 @@ class AvailablePaymentMethodsView(APIView):
 
     def get(self, request, *args, **kwargs):
         """
-        Возвращает список доступных способов оплаты для Работодателя
+        Возвращает список доступных способов оплаты для пользователей разных ролей
         """
         user = request.user
 

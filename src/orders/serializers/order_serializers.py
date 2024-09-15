@@ -51,6 +51,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
     manager = serializers.PrimaryKeyRelatedField(read_only=True)
     city = serializers.CharField(source='city.name', read_only=True)
     employee_info = EmployeeInfoSerializer(source='assigned_employees', many=True, read_only=True)
+    payment_method = serializers.CharField(source='payment_method.name', read_only=True)
 
     class Meta:
         model = B2COrder
@@ -68,6 +69,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'status',
                   'report',
                   'city',
+                  'payment_method',
                   'employee_info',
                   # 'assigned_employees'
                   # 'assigned_employee_id'
