@@ -10,8 +10,10 @@ from orders.models import Country, City
 from orders.serializers.city_order_serializers import CitySerializer
 
 
-# Добавление стран Employer
 class AddCountriesView(generics.UpdateAPIView):
+    """
+    Добавление стран в список выбранных стран работодателя
+    """
     permission_classes = [permissions.IsAuthenticated, IsEmployer]
 
     def post(self, request, *args, **kwargs):
@@ -22,8 +24,10 @@ class AddCountriesView(generics.UpdateAPIView):
         return Response({"status": "Страна или страны успешно добавлены"})
 
 
-# Добавление городов Employer
 class AddCitiesView(generics.UpdateAPIView):
+    """
+    Добавление городов в список выбранных городов работодателя
+    """
     permission_classes = [permissions.IsAuthenticated, IsEmployer]
 
     def post(self, request, *args, **kwargs):
@@ -35,6 +39,16 @@ class AddCitiesView(generics.UpdateAPIView):
         if not cities.filter(country__in=selected_countries).exists():
             return Response({"status": "Некоторые города не относятся к выбранным странам"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Проверяем, какие из этих городов уже добавлены
+        already_added_cities = employer.selected_cities.filter(id__in=city_ids)
+
+        if already_added_cities.exists():
+            already_added_city_names = ", ".join(already_added_cities.values_list('name', flat=True))
+            return Response(
+            {"status": f"Города {already_added_city_names} уже добавлены"},
+                  status=status.HTTP_400_BAD_REQUEST
+            )
+
         # Добавление городов
         employer.selected_cities.add(*cities)
 
@@ -45,8 +59,10 @@ class AddCitiesView(generics.UpdateAPIView):
         return Response({"status": "Город или города успешно добавлены"})
 
 
-# Отображение городов Employer
 class AvailableCitiesView(APIView):
+    """
+    Возвращает список доступных городов для пользователей
+    """
     permission_classes = [permissions.IsAuthenticated, IsEmployerOrManager]
 
     def get(self, request, *args, **kwargs):
