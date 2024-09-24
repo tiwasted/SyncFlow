@@ -4,10 +4,9 @@ from orders.models import AssignableOrder
 from users.models import CustomUser
 from employers.models import Employer, Manager
 from employees.models import Employee
-from employees.serializers.employee_serializers import EmployeeSerializer, EmployeeInfoSerializer
+from employees.serializers.employee_serializers import EmployeeInfoSerializer
 from b2b_client_orders.models import B2BOrder
 from b2c_client_orders.models import B2COrder
-from b2c_client_orders.serializers.load_image_serializers import B2COrderImageSerializer
 
 
 class B2BOrderSerializer(serializers.ModelSerializer):
@@ -51,6 +50,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
     manager = serializers.PrimaryKeyRelatedField(read_only=True)
     city = serializers.CharField(source='city.name', read_only=True)
     employee_info = EmployeeInfoSerializer(source='assigned_employees', many=True, read_only=True)
+    payment_method = serializers.CharField(source='payment_method.name', read_only=True)
 
     class Meta:
         model = B2COrder
@@ -68,9 +68,8 @@ class B2COrderSerializer(serializers.ModelSerializer):
                   'status',
                   'report',
                   'city',
-                  'employee_info',
-                  # 'assigned_employees'
-                  # 'assigned_employee_id'
+                  'payment_method',
+                  'employee_info'
                   ]
 
     def create(self, validated_data):

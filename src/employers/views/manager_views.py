@@ -1,14 +1,13 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from yaml import serialize
 
 from employers.permissions import IsEmployer
 from orders.permissions import IsEmployerOrManager
 from users.models import CustomUser
 from employers.models import Employer
 from employers.models import Manager
-from orders.services import OrderService
+from orders.services.order_service import OrderService
 
 from employers.serializers.manager_serializers import ManagerSerializer, ManagerSerializerUpdate, ManagerInfoSerializer
 

@@ -22,6 +22,14 @@ class City(models.Model):
         return f"{self.name}, {self.country.name}"
 
 
+class PaymentMethod(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
 class AssignableOrderStatus(models.TextChoices):
     IN_PROCESSING = 'in_processing', 'В обработке'
     IN_WAITING = 'in_waiting', 'В ожидании'
@@ -34,6 +42,7 @@ class AssignableOrder(models.Model):
     assigned_employees = models.ManyToManyField('employees.Employee', related_name='%(class)s_assigned_orders')
     report = models.TextField(blank=True, null=True)
     city = models.ForeignKey('orders.City', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_orders')
+    payment_method = models.ForeignKey('orders.PaymentMethod', on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         abstract = True

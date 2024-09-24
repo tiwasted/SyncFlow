@@ -8,7 +8,7 @@ from employers.models import Employer
 from employees.models import Employee
 from orders.models import AssignableOrderStatus
 
-from orders.services import OrderService
+from orders.services.order_service import OrderService
 
 logger = logging.getLogger(__name__)
 CustomUser = get_user_model()

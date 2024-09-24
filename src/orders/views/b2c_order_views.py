@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 from b2c_client_orders.models import B2COrder
-from orders.views.base_order import BaseOrderViewSet
+from orders.views.base_order_views import BaseOrderViewSet
 from orders.serializers.order_serializers import B2COrderSerializer
 
 

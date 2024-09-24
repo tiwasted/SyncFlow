@@ -1,6 +1,6 @@
 from django.db import models
 
-from orders.models import Country, City
+from orders.models import Country, City, PaymentMethod
 from users.models import CustomUser
 
 
@@ -12,6 +12,7 @@ class Employer(models.Model):
     company_description = models.TextField()
     selected_countries = models.ManyToManyField(Country, related_name='employers', blank=True)
     selected_cities = models.ManyToManyField(City, related_name='employers', blank=True)
+    available_payment_methods = models.ManyToManyField(PaymentMethod, related_name='employers', blank=True)
 
 
     def __str__(self):

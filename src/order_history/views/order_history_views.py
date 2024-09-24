@@ -8,7 +8,7 @@ from employers.models import Employer, Manager
 from orders.models import AssignableOrderStatus
 from orders.serializers.order_serializers import B2COrderSerializer
 from order_history.filters import B2COrderFilter
-from orders.services import OrderService
+from orders.services.order_service import OrderService
 
 
 class B2COrderHistoryPagination(PageNumberPagination):
