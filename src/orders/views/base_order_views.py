@@ -8,6 +8,8 @@ from orders.models import AssignableOrderStatus
 from orders.permissions import IsEmployerOrManager
 from orders.services.order_dashboard_service import OrderDashboardService
 from orders.services.order_service import OrderService
+# from orders.services.integration_amoCRM_API import AmoCRMIntegration
+# from integration.api_integrations.amo_integration import init_amo_tokens
 
 
 class BaseOrderViewSet(viewsets.ModelViewSet):
@@ -47,6 +49,11 @@ class BaseOrderViewSet(viewsets.ModelViewSet):
             return Response({"error": "Неправильный формат даты. Используйте формат YYYY-MM-DD."},
                             status=status.HTTP_400_BAD_REQUEST)
 
+        # 1. Синхронизация заказов с внешним API
+        # init_amo_tokens()
+        # AmoCRMIntegration.sync_with_external_api()
+
+        # 2. Получение заказов по дате после синхронизации
         primary_city = OrderService.get_primary_city(user)
 
         orders = OrderService.get_orders_by_date_and_time(user, date=date, city=primary_city, status=AssignableOrderStatus.IN_PROCESSING)

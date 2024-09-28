@@ -17,7 +17,7 @@ class B2COrder(AssignableOrder):
     price = models.DecimalField(max_digits=10, decimal_places=0, null=True)
     description = models.TextField(null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    external_id = models.CharField(max_length=255, unique=True, null=True, blank=True)  # Для хранения уникального ID из внешнего API
 
     def create_schedule_entries(self, employees):
         for employee in employees:

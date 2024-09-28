@@ -1,5 +1,6 @@
 from django.db import models
 import logging
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +44,7 @@ class AssignableOrder(models.Model):
     report = models.TextField(blank=True, null=True)
     city = models.ForeignKey('orders.City', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_orders')
     payment_method = models.ForeignKey('orders.PaymentMethod', on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True

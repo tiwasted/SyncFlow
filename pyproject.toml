@@ -18,6 +18,8 @@ pytz = "^2024.1"
 amocrm-api = "^2.6.1"
 python-dotenv = "^1.0.1"
 pillow = "^10.4.0"
+python-slugify = "^8.0.4"
+django-extensions = "^3.2.3"
 
 [tool.poetry.dev-dependencies]
 
