@@ -16,11 +16,10 @@ from amocrm.v2.tokens import default_token_manager
 import json
 import logging
 from dotenv import load_dotenv
+from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 from orders.models import Country, City
-
-from save_json_db import save_json_to_db
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
@@ -96,7 +95,8 @@ def save_leads_to_json(leads, file_path="leads.json"):
                 "phone": lead.phone,
                 "city": {"name": city.name, "country": city.country.name},
                 "external_id": lead.id,
-                "contacts": [{"name": contact.name} for contact in lead.contacts]
+                "contacts": [{"name": contact.name} for contact in lead.contacts],
+                "updated_at": str(lead.updated_at),
             }
             leads_data.append(lead_data)
         else:
@@ -107,26 +107,36 @@ def save_leads_to_json(leads, file_path="leads.json"):
         json.dump(leads_data, file, ensure_ascii=False, indent=4)
     print(f"Данные сохранены в файл {file_path}")
 
+def get_updated_leads():
+    """Получаем все актуальные сделки из AmoCRM."""
+    init_amo_tokens()
+    return get_leads_in_first_stage_process()
+
 
 if __name__ == "__main__":
     init_amo_tokens()
     leads = get_leads_in_first_stage_process()
     save_leads_to_json(leads)
+
+    from save_json_db import save_json_to_db, update_leads_in_db
     save_json_to_db()
+    update_leads_in_db()
 
-    for index, lead in enumerate(leads, start=1):
-        print(f"{index}.")
-        print(f"ID: {lead.id}")
-        print(f"Наименование: {lead.name}")
-        print(f"Бюджет: {lead.price}")
-        print(f"Адрес: {lead.address}")
-        print(f"Дата и время: {lead.date}")
-        print(f"Телефон: {lead.phone}")
-        print(f"Город: {lead.city}")
 
-        for contact in lead.contacts:
-            print(f"Контакт: {contact.name}")
-        print("------")
+    # for index, lead in enumerate(leads, start=1):
+    #     print(f"{index}.")
+    #     print(f"ID: {lead.id}")
+    #     print(f"Наименование: {lead.name}")
+    #     print(f"Бюджет: {lead.price}")
+    #     print(f"Адрес: {lead.address}")
+    #     print(f"Дата и время: {lead.date}")
+    #     print(f"Телефон: {lead.phone}")
+    #     print(f"Город: {lead.city}")
+    #     print(f"Дата изменения сделки: {lead.updated_at}")
+    #
+    #     for contact in lead.contacts:
+    #         print(f"Контакт: {contact.name}")
+    #     print("------")
 
     # Сначала нужно получить ID воронки и статуса, чтобы получить сделки с определенного статуса.
 
