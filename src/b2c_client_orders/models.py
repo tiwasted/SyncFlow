@@ -17,8 +17,6 @@ class B2COrder(AssignableOrder):
     price = models.DecimalField(max_digits=10, decimal_places=0, null=True)
     description = models.TextField(null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-
     def create_schedule_entries(self, employees):
         for employee in employees:
             Schedule.objects.create(

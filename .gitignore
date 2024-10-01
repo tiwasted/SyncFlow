@@ -3,6 +3,8 @@ access_token.txt
 refresh_token.txt
 src/media
 src/logs
+leads.json
+src/integration/api_integrations/leads.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 .idea/

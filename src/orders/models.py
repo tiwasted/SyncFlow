@@ -1,5 +1,6 @@
 from django.db import models
 import logging
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +44,11 @@ class AssignableOrder(models.Model):
     report = models.TextField(blank=True, null=True)
     city = models.ForeignKey('orders.City', on_delete=models.SET_NULL, null=True, blank=True, related_name='%(class)s_orders')
     payment_method = models.ForeignKey('orders.PaymentMethod', on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    external_id = models.CharField(max_length=255, unique=True, null=True,
+                                   blank=True)  # Для хранения уникального ID из внешнего API
 
     class Meta:
         abstract = True
@@ -87,3 +93,8 @@ class AssignableOrder(models.Model):
         self.status = AssignableOrderStatus.CANCELLED
         logger.debug("Сохранение статуса CANCELLED для заказа %s", self.id)
         self.save()
+
+    def save(self, *args, **kwargs):
+        """Переопределяем метод save, чтобы обновить поле updated_at при любом изменении."""
+        self.updated_at = timezone.now()
+        super().save(*args, **kwargs)
