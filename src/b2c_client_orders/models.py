@@ -12,7 +12,7 @@ class B2COrder(AssignableOrder):
     order_date = models.DateField(null=True)
     order_time = models.TimeField(null=True)
     address = models.CharField(max_length=255, null=True)
-    phone_number_client = models.CharField(max_length=11, null=True)
+    phone_number_client = models.CharField(max_length=255, null=True)
     name_client = models.CharField(max_length=255, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=0, null=True)
     description = models.TextField(null=True)
