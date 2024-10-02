@@ -62,7 +62,7 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - web
+      - backend
     environment:
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_USER=${DATABASE_USER}
