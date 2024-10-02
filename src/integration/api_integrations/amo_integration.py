@@ -16,7 +16,6 @@ from amocrm.v2.tokens import default_token_manager
 import json
 import logging
 from dotenv import load_dotenv
-from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 from orders.models import Country, City
@@ -34,6 +33,7 @@ class CustomLead(_Lead):
     date = custom_field.DateTimeCustomField("Дата и время проведения работ")
     phone = custom_field.TextCustomField("Телефон для API")
     city = custom_field.TextCustomField("Какой город")
+    description_from_Amo = custom_field.TextCustomField("ОПИСАНИЕ ЗАКАЗА")
 
 def init_amo_tokens():
     """Инициализация токенов для работы с API AmoCRM."""
@@ -96,6 +96,7 @@ def save_leads_to_json(leads, file_path="leads.json"):
                 "city": {"name": city.name, "country": city.country.name},
                 "external_id": lead.id,
                 "contacts": [{"name": contact.name} for contact in lead.contacts],
+                "description": lead.description_from_Amo,
                 "updated_at": str(lead.updated_at),
             }
             leads_data.append(lead_data)
@@ -113,14 +114,14 @@ def get_updated_leads():
     return get_leads_in_first_stage_process()
 
 
-if __name__ == "__main__":
-    init_amo_tokens()
-    leads = get_leads_in_first_stage_process()
-    save_leads_to_json(leads)
-
-    from save_json_db import save_json_to_db, update_leads_in_db
-    save_json_to_db()
-    update_leads_in_db()
+# if __name__ == "__main__":
+#     init_amo_tokens()
+#     leads = get_leads_in_first_stage_process()
+#     save_leads_to_json(leads)
+#
+#     from save_json_db import save_json_to_db, update_leads_in_db
+#     save_json_to_db()
+#     update_leads_in_db()
 
 
     # for index, lead in enumerate(leads, start=1):

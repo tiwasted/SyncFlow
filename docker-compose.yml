@@ -56,6 +56,20 @@ services:
     networks:
       - dev
 
+  scheduler:
+    build: .
+    command: "python /app/src/integration/api_integrations/scheduled_script_run.py"
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+    environment:
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+
   db:
     image: postgres:13
     environment:

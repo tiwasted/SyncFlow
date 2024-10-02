@@ -36,7 +36,7 @@ def save_json_to_db(file_path="leads.json"):
 
             # Парсим имя клиента из контактов
             contacts = lead_data.get("contacts", [])
-            name_client = contacts[0]["name"] if contacts else "Неизвестно"
+            name_client = contacts[0]["name"] if contacts else " "
 
             # Используем данные с уже сопоставленным городом для сохранения в БД
             city_name = lead_data["city"]["name"]
@@ -55,7 +55,7 @@ def save_json_to_db(file_path="leads.json"):
                     "phone_number_client": lead_data.get("phone"),
                     "name_client": name_client,
                     "price": lead_data.get("price"),
-                    "description": "",
+                    "description": lead_data.get("description"),
                     "city": city,
                     "updated_at": lead_data.get("updated_at"),
                 }
