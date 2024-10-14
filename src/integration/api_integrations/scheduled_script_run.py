@@ -3,7 +3,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 import logging
 
 from amo_integration import init_amo_tokens, get_leads_in_first_stage_process, save_leads_to_json
-from integration.api_integrations.save_json_db import save_json_to_db, update_leads_in_db
+from integration.api_integrations.save_lead import save_json_to_db, update_leads_in_db
 
 logging.basicConfig(level=logging.INFO)
 
