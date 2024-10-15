@@ -1,6 +1,42 @@
+networks:
+  dev:
+
 services:
-  web:
-    build: .
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - './nginx.conf:/etc/nginx/nginx.conf'
+      - './nginx/certbot/conf:/etc/letsencrypt'
+      - './nginx/certbot/www:/var/www/certbot'
+    depends_on:
+      - backend
+      - frontend
+      - frontend2
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    networks:
+      - dev
+
+  frontend:
+    build:
+      context: /home/tommy/frontend/SyncFlowFrontEnd/desktop
+      dockerfile: Dockerfile
+    networks:
+      - dev
+
+  frontend2:
+    build:
+      context: /home/tommy/frontend/SyncFlowFrontEnd/mobile
+      dockerfile: Dockerfile
+    networks:
+      - dev
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: >
       bash -c "python src/manage.py makemigrations &&
                python src/manage.py migrate &&
@@ -17,6 +53,8 @@ services:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
+    networks:
+      - dev
 
 #  scheduler:
 #    build: .
@@ -24,7 +62,7 @@ services:
 #    volumes:
 #      - .:/app
 #    depends_on:
-#      - web
+#      - backend
 #    environment:
 #      - DATABASE_NAME=${DATABASE_NAME}
 #      - DATABASE_USER=${DATABASE_USER}
@@ -42,6 +80,17 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    networks:
+      - dev
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - './nginx/certbot/conf:/etc/letsencrypt'
+      - './nginx/certbot/www:/var/www/certbot'
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - dev
 
 volumes:
   pgdata:
