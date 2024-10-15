@@ -6,6 +6,7 @@ from orders.views.order_assignment_views import OrderAssignmentViewSet
 from orders.views.order_status_views import OrderStatusViewSet
 from orders.views.order_city_views import CountryListView, CityListView, CitiesByCountryView
 from orders.views.order_payment_method_views import PaymentMethodListView
+from integration.views import webhook_handler
 
 
 router = DefaultRouter()
@@ -24,4 +25,6 @@ urlpatterns = [
     path('countries/<int:country_id>/cities/', CitiesByCountryView.as_view(), name='cities-by-country'),
 
     path('payment-methods/', PaymentMethodListView.as_view(), name='payment-method-list'),
+
+    path('webhook/', webhook_handler, name='webhook_handler'),
 ]

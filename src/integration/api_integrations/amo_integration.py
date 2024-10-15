@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 from django.core.exceptions import ObjectDoesNotExist
 
 from orders.models import Country, City
+from integration.api_integrations.save_lead import save_lead_to_db
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
@@ -108,20 +109,35 @@ def save_leads_to_json(leads, file_path="leads.json"):
         json.dump(leads_data, file, ensure_ascii=False, indent=4)
     print(f"Данные сохранены в файл {file_path}")
 
-def get_updated_leads():
-    """Получаем все актуальные сделки из AmoCRM."""
+
+def save_all_leads_from_json_to_db(file_path="leads.json"):
+    """
+    Чтение данных из JSON файла и сохранение их в базу данных.
+    """
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            leads_data = json.load(file)
+    except Exception as e:
+        logger.error(f"Ошибка при чтении файла {e}")
+        return
+
+    for lead_data in leads_data:
+        try:
+            # Сохранение сделки в базу данных
+            save_lead_to_db(lead_data)
+        except Exception as e:
+            logger.error(f"Ошибка при обработке сделки {lead_data.get('order_name', 'без названия')}: {e}")
+
+
+if __name__ == "__main__":
     init_amo_tokens()
-    return get_leads_in_first_stage_process()
+    leads = get_leads_in_first_stage_process()
+    save_leads_to_json(leads)
+    save_all_leads_from_json_to_db()
 
-
-# if __name__ == "__main__":
-#     init_amo_tokens()
-#     leads = get_leads_in_first_stage_process()
-#     save_leads_to_json(leads)
-#
-#     from save_json_db import save_json_to_db, update_leads_in_db
-#     save_json_to_db()
-#     update_leads_in_db()
+    # from save_lead import
+    # save_lead_to_db()
+    # save_json_to_db()
 
 
     # for index, lead in enumerate(leads, start=1):
